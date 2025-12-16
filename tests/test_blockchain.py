@@ -1,5 +1,5 @@
-import pytest
 from app.blockchain import Blockchain
+
 
 def test_blockchain_initialization():
     """Test 1: Check if chain has length 1 after initialization (Genesis block)."""

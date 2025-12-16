@@ -2,6 +2,7 @@ import hashlib
 import json
 import time
 
+
 class Blockchain:
     def __init__(self):
         self.chain = []

@@ -1,4 +1,5 @@
 from flask import Flask
+
 from .blockchain import Blockchain
 
 # Initialize the Flask App
