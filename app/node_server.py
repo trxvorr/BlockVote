@@ -17,6 +17,44 @@ blockchain = Blockchain()
 def home():
     return "BlockVote Node is Running Successfully!", 200
 
+@app.route('/transactions/new', methods=['POST'])
+def new_transaction():
+    values = request.get_json()
+
+    # Check that the required fields are in the POST'ed data
+    required = ['sender', 'recipient', 'amount']
+    # Not checking 'signature' and 'public_key' here explicitly for all cases (mining reward?), 
+    # but blockchain.new_transaction will enforce it.
+    if not all(k in values for k in required):
+        return 'Missing values', 400
+
+    try:
+        # Signature and Public Key are expected as hex/string in JSON
+        # We need to convert them to bytes for the blockchain method if they are hex strings?
+        # blockchain.new_transaction expects bytes for sig and pem bytes for key.
+        # JSON standardly passes these as strings (hex for sig, string for PEM).
+        
+        signature = values.get('signature')
+        public_key = values.get('public_key')
+        
+        if signature:
+            signature = bytes.fromhex(signature)
+        
+        if public_key:
+             # Ensure it's bytes
+             if isinstance(public_key, str):
+                 public_key = public_key.encode('utf-8')
+
+        # Create a new Transaction
+        index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'], signature, public_key)
+
+        response = {'message': f'Transaction will be added to Block {index}'}
+        return jsonify(response), 201
+    except ValueError as e:
+        return str(e), 400
+    except Exception as e:
+        return str(e), 500
+
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
     values = request.get_json()

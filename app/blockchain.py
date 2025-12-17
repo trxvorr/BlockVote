@@ -2,6 +2,7 @@ import hashlib
 import json
 import time
 from urllib.parse import urlparse
+from .wallet import Wallet
 
 
 class Blockchain:
@@ -36,18 +37,57 @@ class Blockchain:
         self.chain.append(block)
         return block
 
-    def new_transaction(self, sender, recipient, amount):
+    def new_transaction(self, sender, recipient, amount, signature=None, public_key=None):
         """
         Creates a new transaction to go into the next mined Block
         :param sender: <str> Address of the Sender
         :param recipient: <str> Address of the Recipient
         :param amount: <int> Amount
+        :param signature: <bytes> (Optional) SHA-256 signature
+        :param public_key: <bytes> (Optional) Public key to verify signature
         :return: <int> The index of the Block that will hold this transaction
         """
+        
+        # Verify Signature (skip for mining rewards usually designated by sender='0')
+        if sender != '0':
+            if not signature or not public_key:
+                raise ValueError("Transaction signature and public key are required.")
+            
+            # Reconstruct the message that was signed. 
+            # Ideally this matches exactly what the client signed.
+            # Simple format: sender+recipient+str(amount) or json? 
+            # Let's use ordered json string of data to be safe and consistent.
+            transaction_data = {
+                'sender': sender,
+                'recipient': recipient,
+                'amount': amount
+            }
+            # Message is the string representation
+            message = json.dumps(transaction_data, sort_keys=True)
+            
+            # Since signature and public_key come in likely as hex or string from API, 
+            # we might need to handle conversion. But internally Python usually deals with bytes for crypto.
+            # Let's assume they are passed as appropriate types (bytes) or handle conversion if strings.
+            # If coming from our API, they might be hex strings or PEM strings.
+            # Wallet.verify expects bytes for signature and PEM bytes for key.
+            
+            # However, new_transaction is internal logic. The API layer (node_server) should handle parsing?
+            # Or we handle it here.
+            # Let's assume they are passed as is from the caller. 
+            
+            if not Wallet.verify(message, signature, public_key):
+                 raise ValueError("Invalid Transaction Signature")
+
         self.current_transactions.append({
             'sender': sender,
             'recipient': recipient,
             'amount': amount,
+            # We don't necessarily need to store the signature in the chain for this simple demo,
+            # but usually you DO store it to prove validity later.
+            'signature': signature.hex() if isinstance(signature, bytes) else signature,
+            # public_key? Maybe too large to store every time if it's PEM. 
+            # But "sender" is often the Hash of PubKey.
+            # For this demo, let's keep it simple.
         })
 
         return self.last_block['index'] + 1
