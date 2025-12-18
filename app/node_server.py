@@ -203,8 +203,26 @@ def get_nodes():
 
 @app.route('/votes/count', methods=['GET'])
 def count_votes():
-    results = blockchain.count_votes()
-    return jsonify(results), 200
+    raw_results = blockchain.count_votes()
+    
+    # Filter to only show registered candidates
+    filtered_results = {}
+    for election_id, candidates_votes in raw_results.items():
+        filtered_results[election_id] = {}
+        for candidate, count in candidates_votes.items():
+            # Only include if candidate is registered (or show all if no candidates registered)
+            if candidate in CANDIDATES or len(CANDIDATES) == 0:
+                filtered_results[election_id][candidate] = count
+        # If no votes for registered candidates, show empty with 0 for each candidate
+        if len(filtered_results[election_id]) == 0 and len(CANDIDATES) > 0:
+            for c in CANDIDATES:
+                filtered_results[election_id][c] = 0
+    
+    # If no elections exist yet, show candidates with 0 votes
+    if len(filtered_results) == 0 and len(CANDIDATES) > 0:
+        filtered_results['default'] = {c: 0 for c in CANDIDATES}
+    
+    return jsonify(filtered_results), 200
 
 @app.route('/election/window', methods=['POST'])
 def set_election_window():
