@@ -1,10 +1,12 @@
 from sys import argv
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect, url_for
 import threading
 import socket
 import time
 import requests
 import random
+import os
+from datetime import datetime
 from uuid import uuid4
 import json
 from textwrap import dedent
@@ -14,6 +16,7 @@ from .wallet import Wallet
 
 # Initialize the Flask App
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'blockvote-secret-key')
 
 # Generate a globally unique address for this node
 node_identifier = str(uuid4()).replace('-', '')
@@ -24,6 +27,40 @@ blockchain = Blockchain()
 # OTP Authentication Store
 OTP_STORE = {}  # {email: {'otp': str, 'expires': float}}
 VERIFIED_SESSIONS = set()  # Set of valid session tokens
+
+# Admin Authentication
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin123')
+ADMIN_SESSIONS = set()  # Set of valid admin session tokens
+
+# Activity Log (ring buffer)
+ACTIVITY_LOG = []
+MAX_LOG_ENTRIES = 100
+
+def log_activity(level, message):
+    """Log an activity entry."""
+    entry = {
+        'timestamp': datetime.now().isoformat(),
+        'level': level,
+        'message': message
+    }
+    ACTIVITY_LOG.append(entry)
+    if len(ACTIVITY_LOG) > MAX_LOG_ENTRIES:
+        ACTIVITY_LOG.pop(0)
+    # Also print to console
+    print(f"[{entry['timestamp']}] [{level}] {message}")
+
+def require_admin(f):
+    """Decorator to require admin authentication."""
+    from functools import wraps
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.cookies.get('admin_session') or request.headers.get('X-Admin-Token')
+        if not token or token not in ADMIN_SESSIONS:
+            if request.is_json or request.headers.get('Accept') == 'application/json':
+                return jsonify({'message': 'Admin authentication required'}), 401
+            return redirect('/admin/login')
+        return f(*args, **kwargs)
+    return decorated
 
 
 @app.route('/transactions/new', methods=['POST'])
@@ -115,6 +152,7 @@ def mine():
         'proof': block['proof'],
         'previous_hash': block['previous_hash'],
     }
+    log_activity('INFO', f"Block {block['index']} mined with {len(block['transactions'])} transactions")
     return jsonify(response), 200
 
 @app.route('/chain', methods=['GET'])
@@ -232,21 +270,60 @@ def listen_for_peers(my_port):
 # In-memory candidate registry (for demo purposes)
 CANDIDATES = set()
 
+# --- Admin Authentication Routes ---
+@app.route('/admin/login', methods=['GET'])
+def admin_login_page():
+    return render_template('admin_login.html')
+
+@app.route('/admin/login', methods=['POST'])
+def admin_login():
+    values = request.get_json()
+    password = values.get('password') if values else None
+    
+    if password == ADMIN_PASSWORD:
+        token = str(uuid4())
+        ADMIN_SESSIONS.add(token)
+        log_activity('INFO', 'Admin login successful')
+        response = jsonify({'message': 'Login successful', 'token': token})
+        response.set_cookie('admin_session', token, httponly=True, samesite='Lax')
+        return response, 200
+    else:
+        log_activity('WARNING', 'Admin login failed - incorrect password')
+        return jsonify({'message': 'Invalid password'}), 401
+
+@app.route('/admin/logout', methods=['POST'])
+def admin_logout():
+    token = request.cookies.get('admin_session')
+    if token and token in ADMIN_SESSIONS:
+        ADMIN_SESSIONS.discard(token)
+    log_activity('INFO', 'Admin logged out')
+    response = jsonify({'message': 'Logged out'})
+    response.delete_cookie('admin_session')
+    return response, 200
+
 @app.route('/admin')
+@require_admin
 def admin():
     return render_template('admin.html')
+
+@app.route('/logs/recent', methods=['GET'])
+@require_admin
+def get_logs():
+    return jsonify({'logs': ACTIVITY_LOG[-50:]}), 200
 
 @app.route('/candidates', methods=['GET'])
 def get_candidates():
     return jsonify({'candidates': list(CANDIDATES)}), 200
 
 @app.route('/candidates/add', methods=['POST'])
+@require_admin
 def add_candidate():
     values = request.get_json()
     if not values or 'name' not in values:
         return 'Missing name', 400
     
     CANDIDATES.add(values['name'])
+    log_activity('INFO', f"Candidate '{values['name']}' added")
     return jsonify({'message': f"Candidate {values['name']} added"}), 201
 
 @app.route('/stats', methods=['GET'])
@@ -390,11 +467,14 @@ def submit_vote():
              }
              threading.Thread(target=broadcast_tx, args=(payload,)).start()
 
+        log_activity('INFO', f"Vote submitted for '{candidate}' in election '{election_id}'")
         return jsonify({'message': f'Vote submitted successfully! Block Index: {index}'}), 201
 
     except ValueError as e:
+        log_activity('WARNING', f"Vote failed: {str(e)}")
         return jsonify({'message': str(e)}), 400
     except Exception as e:
+        log_activity('ERROR', f"Vote error: {str(e)}")
         return jsonify({'message': f'Error: {str(e)}'}), 500
 
 if __name__ == '__main__':

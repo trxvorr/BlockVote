@@ -116,4 +116,41 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.style.color = 'var(--error-color)';
         }
     });
+
+    // --- Activity Log ---
+    async function fetchLogs() {
+        try {
+            const res = await fetch('/logs/recent');
+            if (res.status === 401) {
+                window.location.href = '/admin/login';
+                return;
+            }
+            const data = await res.json();
+            const logDiv = document.getElementById('activityLog');
+
+            if (data.logs && data.logs.length > 0) {
+                logDiv.innerHTML = data.logs.reverse().map(log => {
+                    const color = log.level === 'ERROR' ? 'var(--error-color)' :
+                        log.level === 'WARNING' ? 'orange' : 'var(--text-color)';
+                    return `<div style="color: ${color}; margin-bottom: 0.3rem;">[${log.timestamp.split('T')[1].split('.')[0]}] [${log.level}] ${log.message}</div>`;
+                }).join('');
+            } else {
+                logDiv.textContent = 'No activity yet.';
+            }
+        } catch (err) {
+            console.error('Failed to fetch logs', err);
+        }
+    }
+    fetchLogs();
+    setInterval(fetchLogs, 5000);
+
+    // --- Logout ---
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try {
+            await fetch('/admin/logout', { method: 'POST' });
+            window.location.href = '/admin/login';
+        } catch (err) {
+            showMessage('Logout failed', 'error');
+        }
+    });
 });

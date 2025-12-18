@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockVote - Admin Login</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">BlockVote</div>
+            <div class="status">Admin Login</div>
+        </header>
+
+        <main>
+            <div class="card" style="max-width: 400px; margin: 0 auto;">
+                <h1>Admin Access</h1>
+                <p class="subtitle">Enter password to access the admin panel.</p>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required
+                            placeholder="Enter admin password">
+                    </div>
+
+                    <button type="submit">Login</button>
+                    <div id="message" class="message hidden"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const message = document.getElementById('message');
+
+            try {
+                const res = await fetch('/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    window.location.href = '/admin';
+                } else {
+                    message.textContent = data.message;
+                    message.className = 'message error';
+                }
+            } catch (err) {
+                message.textContent = 'Network error';
+                message.className = 'message error';
+            }
+        });
+    </script>
+</body>
+
+</html>
