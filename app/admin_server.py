@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+
 from .wallet import Wallet
 
 # Initialize the Flask App

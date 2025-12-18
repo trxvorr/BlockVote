@@ -4,54 +4,83 @@
 
 ## 🚀 Key Features
 * **Immutable Ledger:** Votes are recorded on a blockchain, making them impossible to alter or delete.
-* **Decentralized Identity (DID):** Ensures one person = one vote without storing sensitive personal data.
+* **Proof of Work:** Mining secures the network against spam attacks.
 * **Blind Signatures:** Mathematically proves a vote is valid while keeping the voter's choice secret.
-* **P2P Network:** Runs on a distributed network of nodes rather than a single central server.
+* **P2P Network:** Runs on a distributed network of nodes with automatic peer discovery.
+* **Email OTP Authentication:** Two-factor verification before voting.
+* **Tamper Evidence:** Real-time integrity checks detect chain corruption.
+* **Admin Dashboard:** Protected panel for election management with activity logging.
+* **Real-Time Analytics:** Live vote counts with Chart.js visualization.
 
 ## 🛠️ Tech Stack
 * **Language:** Python 3.x
 * **Framework:** Flask (Web Server)
-* **Cryptography:** `rsa`, `hashlib` (SHA-256)
-* **Networking:** HTTP/REST APIs for peer discovery
+* **Cryptography:** `rsa`, `hashlib` (SHA-256), Blind Signatures
+* **Frontend:** HTML5, CSS3, JavaScript, Chart.js
+* **Testing:** pytest (68+ tests)
 
 ---
 
-## 🏃‍♂️ How to Run the Project locally
-
-Follow these steps to get the node running on your machine.
+## 🏃‍♂️ How to Run the Project Locally
 
 ### 1. Clone the Repository
-**Do not fork.** Clone the main repository directly.
 ```bash
-git clone [https://github.com/trxvorr/BlockVote.git](https://github.com/trxvorr/BlockVote.git)
+git clone https://github.com/trxvorr/BlockVote.git
 cd BlockVote
 ```
-### 2. Set up the Environment
-It is recommended to use a virtual environment to keep dependencies clean.
 
-For Windows:
+### 2. Set up the Environment
 ```bash
 python -m venv venv
+# Windows:
 venv\Scripts\activate
+# Linux/Mac:
+source venv/bin/activate
 ```
 
 ### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
-### 4. Run the Node
 
-Start the blockchain server:
+### 4. Run the Node
 ```bash
-python node_server.py
+python -m app.node_server
+# Or with a custom port:
+python -m app.node_server 5001
 ```
 
+### 5. Access the Application
+- **Voting Page:** http://localhost:5000/
+- **Admin Dashboard:** http://localhost:5000/admin (Password: `admin123`)
 
-### 5. Verify
+### 6. Run Tests
+```bash
+pytest tests/ -v
+```
 
-Open your browser and visit:
+### 7. Run Benchmark
+```bash
+python scripts/benchmark.py
+```
 
-http://localhost:5000/ You should see the status message: "BlockVote Node is Running Successfully!"
+---
+
+## 📊 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Voting page |
+| `/admin` | GET | Admin dashboard (auth required) |
+| `/vote/submit` | POST | Submit a vote |
+| `/mine` | GET | Mine pending transactions |
+| `/chain` | GET | Get full blockchain |
+| `/chain/verify` | GET | Verify chain integrity |
+| `/stats` | GET | Get node statistics |
+| `/candidates` | GET | List candidates |
+| `/votes/count` | GET | Get vote counts |
+
+---
 
 ## Team Workflow (Read Carefully!)
 

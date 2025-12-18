@@ -4,16 +4,17 @@ BlockVote Benchmark Script
 
 Run standalone: python scripts/benchmark.py
 """
-import sys
-import os
-import time
 import json
+import os
+import sys
+import time
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.blockchain import Blockchain
 from app.wallet import Wallet
+
 
 def benchmark_mining(blockchain, num_blocks=5):
     """Benchmark mining performance."""
@@ -32,7 +33,7 @@ def benchmark_mining(blockchain, num_blocks=5):
         print(f"  Block {i+1}: {elapsed:.3f}s (proof={proof})")
     
     avg = sum(times) / len(times)
-    print(f"\n  Results:")
+    print("\n  Results:")
     print(f"    Blocks mined: {num_blocks}")
     print(f"    Total time: {sum(times):.3f}s")
     print(f"    Average: {avg:.3f}s per block")
@@ -65,7 +66,7 @@ def benchmark_transactions(blockchain, num_tx=100):
     elapsed = time.time() - start
     tps = num_tx / elapsed
     
-    print(f"\n  Results:")
+    print("\n  Results:")
     print(f"    Transactions: {num_tx}")
     print(f"    Total time: {elapsed:.3f}s")
     print(f"    Throughput: {tps:.1f} TPS")
@@ -88,7 +89,7 @@ def benchmark_verification(blockchain):
     elapsed = time.time() - start
     per_check = (elapsed / iterations) * 1000
     
-    print(f"\n  Results:")
+    print("\n  Results:")
     print(f"    Chain length: {len(blockchain.chain)} blocks")
     print(f"    Iterations: {iterations}")
     print(f"    Total time: {elapsed:.3f}s")
@@ -123,7 +124,7 @@ def main():
     print(f"  Mining:        {mining_avg:.3f}s avg per block")
     print(f"  Transactions:  {tps:.1f} TPS")
     print(f"  Verification:  {verify_ms:.3f}ms per check")
-    print(f"\n  Chain stats:")
+    print("\n  Chain stats:")
     print(f"    Total blocks: {len(blockchain.chain)}")
     print(f"    Pending tx:   {len(blockchain.current_transactions)}")
     print("="*60 + "\n")

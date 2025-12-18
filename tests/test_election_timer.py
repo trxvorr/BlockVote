@@ -1,7 +1,9 @@
-import pytest
-import time
 import json
 import os
+import time
+
+import pytest
+
 from app.blockchain import Blockchain
 from app.wallet import Wallet
 

@@ -1,5 +1,6 @@
 from app.shamir import Shamir
 
+
 def test_shamir_simple_string():
     secret = b"Hello World"
     n = 5

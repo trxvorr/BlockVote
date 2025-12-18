@@ -1,6 +1,8 @@
-import pytest
 import os
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
+import pytest
+
 from app.blockchain import Blockchain
 
 TEST_PORT = 9992

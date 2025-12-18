@@ -1,6 +1,9 @@
-import pytest
 import json
+
+import pytest
+
 from app.node_server import app
+
 
 @pytest.fixture
 def client():

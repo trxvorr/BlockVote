@@ -1,5 +1,7 @@
 import pytest
-from app.node_server import app, ADMIN_SESSIONS, CANDIDATES
+
+from app.node_server import ADMIN_SESSIONS, CANDIDATES, app
+
 
 @pytest.fixture
 def client():

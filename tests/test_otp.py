@@ -1,5 +1,7 @@
 import pytest
-from app.node_server import app, OTP_STORE, VERIFIED_SESSIONS
+
+from app.node_server import OTP_STORE, VERIFIED_SESSIONS, app
+
 
 @pytest.fixture
 def client():

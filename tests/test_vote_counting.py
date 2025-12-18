@@ -1,10 +1,10 @@
-import pytest
 import json
+import os
+
+import pytest
+
 from app.blockchain import Blockchain
 from app.wallet import Wallet
-
-import os
-import shutil
 
 TEST_PORT = 9999
 DATA_DIR = 'data'

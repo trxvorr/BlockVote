@@ -1,9 +1,11 @@
-import os
 import hashlib
 import json
+import os
 import time
-import requests
 from urllib.parse import urlparse
+
+import requests
+
 from .wallet import Wallet
 
 
@@ -30,7 +32,7 @@ class Blockchain:
     def load_state(self):
         if os.path.exists(self.file_path):
             try:
-                with open(self.file_path, 'r') as f:
+                with open(self.file_path) as f:
                     data = json.load(f)
                     self.chain = data.get('chain', [])
                     self.current_transactions = data.get('transactions', [])
@@ -256,7 +258,7 @@ class Blockchain:
         # Check genesis block
         genesis = self.chain[0]
         if genesis.get('previous_hash') != '1' or genesis.get('proof') != 100:
-            errors.append(f"Block 0: Invalid genesis block")
+            errors.append("Block 0: Invalid genesis block")
         
         # Check each subsequent block
         for i in range(1, len(self.chain)):

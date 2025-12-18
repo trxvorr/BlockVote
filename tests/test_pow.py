@@ -1,5 +1,5 @@
-import pytest
 from app.blockchain import Blockchain
+
 
 def test_valid_proof_true():
     # Known working pair for "0000" prefix using this algorithm?

@@ -1,6 +1,9 @@
-import pytest
 import json
+
+import pytest
+
 from app.admin_server import app, initialize_keys
+
 
 @pytest.fixture
 def client():

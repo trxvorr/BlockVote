@@ -1,6 +1,8 @@
-import rsa
-import random
 import hashlib
+import random
+
+import rsa
+
 
 class Wallet:
     @staticmethod

@@ -1,5 +1,6 @@
 from app.wallet import Wallet
 
+
 def test_generate_keys():
     pub_key, priv_key = Wallet.generate_keys()
     assert pub_key is not None

@@ -2,13 +2,15 @@
 Stress tests for BlockVote system.
 Run with: pytest tests/test_stress.py -v -s
 """
-import pytest
+import concurrent.futures
+import json
 import os
 import time
-import concurrent.futures
+
+import pytest
+
 from app.blockchain import Blockchain
 from app.wallet import Wallet
-import json
 
 TEST_PORT = 9997
 DATA_DIR = 'data'

@@ -1,8 +1,11 @@
-import pytest
 import json
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
+
+import pytest
+
 from app.node_server import app
 from app.wallet import Wallet
+
 
 @pytest.fixture
 def client():

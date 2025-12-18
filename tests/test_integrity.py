@@ -1,5 +1,7 @@
-import pytest
 import os
+
+import pytest
+
 from app.blockchain import Blockchain
 
 TEST_PORT = 9996

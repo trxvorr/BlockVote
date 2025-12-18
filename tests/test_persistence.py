@@ -1,7 +1,8 @@
-import pytest
-import os
 import json
-import shutil
+import os
+
+import pytest
+
 from app.blockchain import Blockchain
 
 TEST_PORT = 9999
@@ -44,7 +45,7 @@ def test_save_and_load_state(clean_persistence):
     # 3. Blockchain saves automatically on changes. 
     # Check file exists and has content
     assert os.path.exists(FILE_PATH)
-    with open(FILE_PATH, 'r') as f:
+    with open(FILE_PATH) as f:
         data = json.load(f)
         assert len(data['chain']) == 2
         assert len(data['nodes']) == 1

@@ -1,6 +1,8 @@
-import pytest
 import json
 import os
+
+import pytest
+
 from app.blockchain import Blockchain
 from app.wallet import Wallet
 

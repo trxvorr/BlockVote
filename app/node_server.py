@@ -1,15 +1,15 @@
-from sys import argv
-from flask import Flask, jsonify, request, render_template, redirect, url_for
-import threading
-import socket
-import time
-import requests
-import random
-import os
-from datetime import datetime
-from uuid import uuid4
 import json
-from textwrap import dedent
+import os
+import random
+import socket
+import threading
+import time
+from datetime import datetime
+from sys import argv
+from uuid import uuid4
+
+import requests
+from flask import Flask, jsonify, redirect, render_template, request
 
 from .blockchain import Blockchain
 from .wallet import Wallet
@@ -229,7 +229,7 @@ def broadcast_presence(my_port):
     """
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        message = f"BLOCKVOTE_HELLO {my_port}".encode('utf-8')
+        message = f"BLOCKVOTE_HELLO {my_port}".encode()
         while peer_discovery_active:
             try:
                 s.sendto(message, ('<broadcast>', BROADCAST_PORT))
@@ -362,7 +362,7 @@ def request_otp():
     print(f"\n{'='*50}")
     print(f"[OTP] Email: {email}")
     print(f"[OTP] Code: {otp}")
-    print(f"[OTP] Expires in 5 minutes")
+    print("[OTP] Expires in 5 minutes")
     print(f"{'='*50}\n")
     
     return jsonify({'message': 'OTP sent to your email (check console)'}), 200
