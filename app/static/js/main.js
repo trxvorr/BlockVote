@@ -4,6 +4,82 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsContainer = document.getElementById('resultsContainer');
     const refreshBtn = document.getElementById('refreshBtn');
 
+    // OTP Session
+    let sessionToken = null;
+    const requestOtpBtn = document.getElementById('requestOtpBtn');
+    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+    const otpSection = document.getElementById('otpSection');
+    const verificationStatus = document.getElementById('verificationStatus');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Request OTP
+    requestOtpBtn.addEventListener('click', async () => {
+        const email = document.getElementById('voterEmail').value;
+        if (!email) {
+            showMessage('Please enter your email', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch('/auth/request-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                otpSection.style.display = 'block';
+                verificationStatus.textContent = data.message;
+                verificationStatus.className = 'message success';
+            } else {
+                showMessage(data.message, 'error');
+            }
+        } catch (err) {
+            showMessage('Network error', 'error');
+        }
+    });
+
+    // Verify OTP
+    verifyOtpBtn.addEventListener('click', async () => {
+        const email = document.getElementById('voterEmail').value;
+        const otp = document.getElementById('otpCode').value;
+
+        if (!otp) {
+            verificationStatus.textContent = 'Please enter the OTP';
+            verificationStatus.className = 'message error';
+            return;
+        }
+
+        try {
+            const res = await fetch('/auth/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, otp })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                sessionToken = data.session_token;
+                verificationStatus.textContent = '✓ Email verified! You can now submit your vote.';
+                verificationStatus.className = 'message success';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Vote';
+                // Disable OTP inputs
+                document.getElementById('voterEmail').disabled = true;
+                document.getElementById('otpCode').disabled = true;
+                requestOtpBtn.disabled = true;
+                verifyOtpBtn.disabled = true;
+            } else {
+                verificationStatus.textContent = data.message;
+                verificationStatus.className = 'message error';
+            }
+        } catch (err) {
+            verificationStatus.textContent = 'Network error';
+            verificationStatus.className = 'message error';
+        }
+    });
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -15,7 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const payload = {
             candidate: formData.get('candidate'),
             private_key: formData.get('privateKey'),
-            election_id: formData.get('electionId')
+            election_id: formData.get('electionId'),
+            session_token: sessionToken
         };
 
         try {

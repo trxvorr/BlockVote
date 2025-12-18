@@ -4,6 +4,7 @@ import threading
 import socket
 import time
 import requests
+import random
 from uuid import uuid4
 import json
 from textwrap import dedent
@@ -19,6 +20,10 @@ node_identifier = str(uuid4()).replace('-', '')
 
 # Initialize the Blockchain
 blockchain = Blockchain()
+
+# OTP Authentication Store
+OTP_STORE = {}  # {email: {'otp': str, 'expires': float}}
+VERIFIED_SESSIONS = set()  # Set of valid session tokens
 
 
 @app.route('/transactions/new', methods=['POST'])
@@ -254,6 +259,58 @@ def get_stats():
     }
     return jsonify(response), 200
 
+# --- OTP Authentication ---
+@app.route('/auth/request-otp', methods=['POST'])
+def request_otp():
+    values = request.get_json()
+    email = values.get('email')
+    
+    if not email:
+        return jsonify({'message': 'Email is required'}), 400
+    
+    # Generate 6-digit OTP
+    otp = str(random.randint(100000, 999999))
+    expires = time.time() + 300  # 5 minutes
+    
+    OTP_STORE[email] = {'otp': otp, 'expires': expires}
+    
+    # Simulate email by logging to console
+    print(f"\n{'='*50}")
+    print(f"[OTP] Email: {email}")
+    print(f"[OTP] Code: {otp}")
+    print(f"[OTP] Expires in 5 minutes")
+    print(f"{'='*50}\n")
+    
+    return jsonify({'message': 'OTP sent to your email (check console)'}), 200
+
+@app.route('/auth/verify-otp', methods=['POST'])
+def verify_otp():
+    values = request.get_json()
+    email = values.get('email')
+    otp = values.get('otp')
+    
+    if not email or not otp:
+        return jsonify({'message': 'Email and OTP are required'}), 400
+    
+    stored = OTP_STORE.get(email)
+    
+    if not stored:
+        return jsonify({'message': 'No OTP requested for this email'}), 400
+    
+    if time.time() > stored['expires']:
+        del OTP_STORE[email]
+        return jsonify({'message': 'OTP has expired'}), 400
+    
+    if stored['otp'] != otp:
+        return jsonify({'message': 'Invalid OTP'}), 400
+    
+    # OTP valid - create session
+    session_token = str(uuid4())
+    VERIFIED_SESSIONS.add(session_token)
+    del OTP_STORE[email]
+    
+    return jsonify({'message': 'Verification successful', 'session_token': session_token}), 200
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -261,6 +318,11 @@ def index():
 @app.route('/vote/submit', methods=['POST'])
 def submit_vote():
     values = request.get_json()
+    
+    # Validate session token (OTP verification)
+    session_token = values.get('session_token')
+    if not session_token or session_token not in VERIFIED_SESSIONS:
+        return jsonify({'message': 'Please verify your email first'}), 401
     
     required = ['candidate', 'private_key']
     if not all(k in values for k in required):

@@ -227,6 +227,50 @@
             ],
             "proof": 43610,
             "previous_hash": "2aa1b3c9d0194e3642f1b71aa8cbd9fc07c735f5da9f7249cddab8305232e05e"
+        },
+        {
+            "index": 16,
+            "timestamp": 1766021312.812389,
+            "transactions": [
+                {
+                    "sender": "sender",
+                    "recipient": "recipient",
+                    "amount": 100,
+                    "election_id": "default",
+                    "signature": "48115f5a4dd1e6da9bb48b473405fefd994ef5fbddb7802df9e92ba29512f7203c1d3f521bbad69510ce41133c97c45b5a6fd964938e28f33855d82ca2233231dec8cb9f195d4380387002d704911c17d03431f735e68ba20fe218f065759a7a7a024425a4ea05338257c8cc0685cb19cafc810ffe403768eabc9c72efcf27faeb11a0dd2d85d70805a98239e7819f9a583a96d88e8881d13247dc84cab39fafe5123580278332165677af717849fdea467422d138b9c325231161d588f6d7a571cc7b23e8a4072ba45796db5ef006d25fc328666062cb90ccb3c663f2e8d2351ae956813b7ba67777317749a0faa017600447a609188d21a0798994e24cd9a0"
+                },
+                {
+                    "sender": "0",
+                    "recipient": "99793457428a4dd38f42be7cc6cf16f5",
+                    "amount": 1,
+                    "election_id": "default",
+                    "signature": null
+                }
+            ],
+            "proof": 64431,
+            "previous_hash": "60d3e9db71305878655fb5c7f5856a49e3910cb61ad1f98e57ec8193bc2c3417"
+        },
+        {
+            "index": 17,
+            "timestamp": 1766021438.524436,
+            "transactions": [
+                {
+                    "sender": "sender",
+                    "recipient": "recipient",
+                    "amount": 100,
+                    "election_id": "default",
+                    "signature": "3045cbd71edc9a2cdb71c4f4970dcca12ec5c1c05bc6fd4b8361e059b4c12272de9fe27b97db1dabf10820a88c0234af5210bef19796f0fd6b7ee43a5c6842967ea78c472ac0a7346895a72d504f0baee777893919a79521f336024b9b584da4aec2fd82542d6202c1c503c1528cdb73cdb88b1a7391d503d5f74af8cade540f0c3abda3201bc5bf739d24233c7079fde97753131113b4cb875279066173c2b77086f9d6dd98c583650f4b1a066ac161e548f9196bf923c62a941488a6b13527569fd790e8713f9fae9a5f0e1108a0d2021bc1c1d15c9843f1f77f8cc81ef4505ea94939a0cda35ad5a80357152d45c35ab1449180a9388ed4ed96a68bea2c6c"
+                },
+                {
+                    "sender": "0",
+                    "recipient": "459db9e6dac1418592f0e23551100e86",
+                    "amount": 1,
+                    "election_id": "default",
+                    "signature": null
+                }
+            ],
+            "proof": 46773,
+            "previous_hash": "7c7111ce143ab0376491b776e0cbbd74acc331e76bc5f495c74d643c4b2c50ae"
         }
     ],
     "transactions": [
@@ -235,14 +279,14 @@
             "recipient": "recipient",
             "amount": 100,
             "election_id": "default",
-            "signature": "48115f5a4dd1e6da9bb48b473405fefd994ef5fbddb7802df9e92ba29512f7203c1d3f521bbad69510ce41133c97c45b5a6fd964938e28f33855d82ca2233231dec8cb9f195d4380387002d704911c17d03431f735e68ba20fe218f065759a7a7a024425a4ea05338257c8cc0685cb19cafc810ffe403768eabc9c72efcf27faeb11a0dd2d85d70805a98239e7819f9a583a96d88e8881d13247dc84cab39fafe5123580278332165677af717849fdea467422d138b9c325231161d588f6d7a571cc7b23e8a4072ba45796db5ef006d25fc328666062cb90ccb3c663f2e8d2351ae956813b7ba67777317749a0faa017600447a609188d21a0798994e24cd9a0"
+            "signature": "7d89ef01fce0d0ccdae48215e3aa519ed71b812c71495a5d51eb896aa459b65c407e3a140a63d96b5c0b0c289f5ebd848ca1898b01606683f6353382b71a86e191121c2ebc7b4ec0a3fbc0ff6608e96777f79310a4660581a4cf1c830f08466a488f4e57a652d3afe72c67d6ec47fadf73805a57b9bee2070ec23cf532b5d1c5206074ce9a1861ceec9666c97c4f5a5b5a396063aa8458985363e8cacd7d64aec5aa95db7e63c30f8430f9c2097198fe105176ba887247498575a62e938358b515d350abe7bf29bc700bc8a14213590ed26219df816e2c6c4af4fd0804a3e0b21f8a3b2efa60e84baa29db2623ca4ef06f3b91932ba23b708f1be17dbdb162ee"
         }
     ],
     "nodes": [
         "peer-node:5000",
+        "192.168.0.6:5000",
         "192.168.0.5:5000",
-        "node2",
-        "192.168.0.6:5000"
+        "node2"
     ],
     "election_start": null,
     "election_end": null

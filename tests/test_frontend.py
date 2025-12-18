@@ -12,12 +12,11 @@ def test_frontend_home(client):
     assert response.status_code == 200
     assert b'Cast Your Vote' in response.data
 
-# We skip full vote submit test here as it requires a valid PEM key 
-# which is cumbersome to generate in a simple request without wallet helper context.
-# But we can verify it rejects missing params.
-def test_frontend_submit_missing_params(client):
-    response = client.post('/vote/submit', json={})
-    assert response.status_code == 400
+# We skip full vote submit test here as it requires valid session token.
+# But we can verify it rejects unverified users.
+def test_frontend_submit_requires_session(client):
+    response = client.post('/vote/submit', json={'candidate': 'Alice', 'private_key': 'test'})
+    assert response.status_code == 401  # Session required
 
 def test_admin_dashboard_loads(client):
     response = client.get('/admin')

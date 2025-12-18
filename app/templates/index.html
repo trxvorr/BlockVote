@@ -27,6 +27,30 @@
                 <p class="subtitle">Secure. Transparent. Immutable.</p>
 
                 <form id="voteForm">
+                    <!-- Email Verification -->
+                    <div class="form-group">
+                        <label for="voterEmail">Your Email (for OTP verification)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="email" id="voterEmail" name="voterEmail" placeholder="voter@example.com"
+                                style="flex:1" required>
+                            <button type="button" id="requestOtpBtn" style="width: auto; padding: 0.8rem 1.5rem;">Get
+                                OTP</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="otpSection" style="display: none;">
+                        <label for="otpCode">Enter OTP Code</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="otpCode" name="otpCode" placeholder="123456" maxlength="6"
+                                style="flex:1">
+                            <button type="button" id="verifyOtpBtn"
+                                style="width: auto; padding: 0.8rem 1.5rem;">Verify</button>
+                        </div>
+                        <div id="verificationStatus" class="message hidden" style="margin-top: 0.5rem;"></div>
+                    </div>
+
+                    <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 1.5rem 0;">
+
                     <div class="form-group">
                         <label for="electionId">Election ID</label>
                         <input type="text" id="electionId" name="electionId" placeholder="e.g. invalid-2025"
@@ -46,7 +70,7 @@
                             placeholder="-----BEGIN RSA PRIVATE KEY-----..." required></textarea>
                     </div>
 
-                    <button type="submit" id="submitBtn">Submit Vote</button>
+                    <button type="submit" id="submitBtn" disabled>Submit Vote (Verify Email First)</button>
                     <div id="message" class="message hidden"></div>
                 </form>
             </div>
