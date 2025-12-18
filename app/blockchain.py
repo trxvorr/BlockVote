@@ -242,6 +242,46 @@ class Blockchain:
 
         return True
 
+    def verify_integrity(self):
+        """
+        Perform a detailed integrity check on the blockchain.
+        Returns a report with any errors found.
+        :return: <dict> {'valid': bool, 'errors': list, 'blocks_checked': int}
+        """
+        errors = []
+        
+        if len(self.chain) == 0:
+            return {'valid': False, 'errors': ['Chain is empty'], 'blocks_checked': 0}
+        
+        # Check genesis block
+        genesis = self.chain[0]
+        if genesis.get('previous_hash') != '1' or genesis.get('proof') != 100:
+            errors.append(f"Block 0: Invalid genesis block")
+        
+        # Check each subsequent block
+        for i in range(1, len(self.chain)):
+            block = self.chain[i]
+            prev_block = self.chain[i - 1]
+            
+            # Check previous hash
+            expected_hash = self.hash(prev_block)
+            if block['previous_hash'] != expected_hash:
+                errors.append(f"Block {i}: Invalid previous_hash. Expected {expected_hash[:16]}..., got {block['previous_hash'][:16]}...")
+            
+            # Check proof of work
+            if not self.valid_proof(prev_block['proof'], block['proof']):
+                errors.append(f"Block {i}: Invalid proof of work")
+            
+            # Check block index continuity
+            if block.get('index') != i + 1:
+                errors.append(f"Block {i}: Index mismatch. Expected {i + 1}, got {block.get('index')}")
+        
+        return {
+            'valid': len(errors) == 0,
+            'errors': errors,
+            'blocks_checked': len(self.chain)
+        }
+
     def resolve_conflicts(self):
         """
         This is our Consensus Algorithm, it resolves conflicts

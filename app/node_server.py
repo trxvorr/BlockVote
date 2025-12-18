@@ -259,6 +259,13 @@ def get_stats():
     }
     return jsonify(response), 200
 
+@app.route('/chain/verify', methods=['GET'])
+def verify_chain():
+    """Verify blockchain integrity and return detailed report."""
+    report = blockchain.verify_integrity()
+    status_code = 200 if report['valid'] else 409  # 409 Conflict if invalid
+    return jsonify(report), status_code
+
 # --- OTP Authentication ---
 @app.route('/auth/request-otp', methods=['POST'])
 def request_otp():
