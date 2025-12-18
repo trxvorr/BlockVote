@@ -65,9 +65,19 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="privateKey">Your Private Key (PEM format)</label>
-                        <textarea id="privateKey" name="privateKey" rows="5"
-                            placeholder="-----BEGIN RSA PRIVATE KEY-----..." required></textarea>
+                        <label for="privateKey">Your Private Key</label>
+                        <button type="button" id="generateKeysBtn" class="secondary-btn"
+                            style="margin-bottom: 0.5rem;">🔑 Generate New Key Pair</button>
+                        <div id="keyDisplay"
+                            style="display: none; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                            <p style="margin: 0 0 0.5rem 0; color: var(--accent-color);"><strong>⚠️ SAVE YOUR PRIVATE
+                                    KEY SECURELY!</strong></p>
+                            <p style="margin: 0; font-size: 0.85rem; opacity: 0.8;">You need this to vote. It will not
+                                be shown again.</p>
+                        </div>
+                        <textarea id="privateKey" name="privateKey" rows="3"
+                            placeholder="Click 'Generate New Key Pair' or paste your existing private key..."
+                            required></textarea>
                     </div>
 
                     <button type="submit" id="submitBtn" disabled>Submit Vote (Verify Email First)</button>

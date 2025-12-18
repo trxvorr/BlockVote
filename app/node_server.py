@@ -358,6 +358,16 @@ def verify_chain():
     status_code = 200 if report['valid'] else 409  # 409 Conflict if invalid
     return jsonify(report), status_code
 
+@app.route('/wallet/generate', methods=['POST'])
+def generate_wallet():
+    """Generate a new key pair for a voter."""
+    pub, priv = Wallet.generate_keys()
+    log_activity('INFO', 'New wallet key pair generated')
+    return jsonify({
+        'public_key': pub.decode(),
+        'private_key': priv.decode()
+    }), 200
+
 # --- OTP Authentication ---
 @app.route('/auth/request-otp', methods=['POST'])
 def request_otp():

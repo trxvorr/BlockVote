@@ -403,6 +403,28 @@
             ],
             "proof": 4329,
             "previous_hash": "e88352f94b4ab5d26a60a9dff190abd651e528b704cbcbbada21efe13af03f1d"
+        },
+        {
+            "index": 24,
+            "timestamp": 1766025448.5194225,
+            "transactions": [
+                {
+                    "sender": "sender",
+                    "recipient": "recipient",
+                    "amount": 100,
+                    "election_id": "default",
+                    "signature": "34cfb547720dc8d8e52a759c9d290164ad20952c1a2c502aad00afece62c6a80fa279e8927ce28270bd3be951fbcf3b54fa155407e1d97722b2859c04b90369d147dfa8ef56adb99300be7592b9202735d03527e4dfe361546f7d6f56d0cf510746db6ea3f64ee01299dbd4d18efb2b8372abcd6f58f3081673df5c80220475874674b56941f201a97266fa46c2b443ed12d703e28d4a43abe0592abe226806e0fbc2861803f003e69871c990d42b668db5613c8c91114e14177e285ac3daf8b05609df2d1ffd40e3eb9869b700f0fb46ee19b2041fdbfdbbdd8923439667a27fdafbf86bf0ec32a844065216a82dbf8c86277b306d2162a4f86269d088b7a63"
+                },
+                {
+                    "sender": "0",
+                    "recipient": "b593f43ae9cb4d9487cfea1cc0c55017",
+                    "amount": 1,
+                    "election_id": "default",
+                    "signature": null
+                }
+            ],
+            "proof": 2545,
+            "previous_hash": "b2f8fbf8e5c19486fdf463445a10260298000ed6d408253bbc2f845cb3ba01bd"
         }
     ],
     "transactions": [
@@ -411,14 +433,14 @@
             "recipient": "recipient",
             "amount": 100,
             "election_id": "default",
-            "signature": "34cfb547720dc8d8e52a759c9d290164ad20952c1a2c502aad00afece62c6a80fa279e8927ce28270bd3be951fbcf3b54fa155407e1d97722b2859c04b90369d147dfa8ef56adb99300be7592b9202735d03527e4dfe361546f7d6f56d0cf510746db6ea3f64ee01299dbd4d18efb2b8372abcd6f58f3081673df5c80220475874674b56941f201a97266fa46c2b443ed12d703e28d4a43abe0592abe226806e0fbc2861803f003e69871c990d42b668db5613c8c91114e14177e285ac3daf8b05609df2d1ffd40e3eb9869b700f0fb46ee19b2041fdbfdbbdd8923439667a27fdafbf86bf0ec32a844065216a82dbf8c86277b306d2162a4f86269d088b7a63"
+            "signature": "669a1d8e35ef700abf77d42ccdf5c39f514bbb5f9792db4d9d8522ddfd5bbc406fcda6f2ded28974a6e5fd9b2e72aabaf2499d658ee9a0dab69af8328a7f8d9008605a81bd37c3479e47152fb80e199433c47e11bc1b3524101c61dcc0a540b2b2eb9e6d97ac611f799497e99e5f304f797186b0137193eec419ce1c17304fd0b72be44f1a86f40e757859d5948343ce2b0726afdf309fccecd000cd1123830f4e8106a5fb5c2708b6812675e6169f214bc0bb1d0f69abf6c6d04e61d06b498c990cb65552eccbf1c455acd39d27bd0a78eeedf140a30bb0a42d8d2f82e320dbb3ea212cfc8eae0686678b87faa5ffb0e52815642fc86dc9b19e43c5f7b77451"
         }
     ],
     "nodes": [
+        "192.168.0.6:5000",
         "peer-node:5000",
         "192.168.0.5:5000",
-        "node2",
-        "192.168.0.6:5000"
+        "node2"
     ],
     "election_start": null,
     "election_end": null

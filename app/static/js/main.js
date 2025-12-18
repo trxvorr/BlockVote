@@ -11,6 +11,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const otpSection = document.getElementById('otpSection');
     const verificationStatus = document.getElementById('verificationStatus');
     const submitBtn = document.getElementById('submitBtn');
+    const generateKeysBtn = document.getElementById('generateKeysBtn');
+
+    // Generate Key Pair
+    generateKeysBtn.addEventListener('click', async () => {
+        generateKeysBtn.disabled = true;
+        generateKeysBtn.textContent = 'Generating...';
+
+        try {
+            const res = await fetch('/wallet/generate', { method: 'POST' });
+            const data = await res.json();
+
+            if (res.ok) {
+                document.getElementById('privateKey').value = data.private_key;
+                const keyDisplay = document.getElementById('keyDisplay');
+                keyDisplay.style.display = 'block';
+                keyDisplay.innerHTML = `
+                    <p style="margin: 0 0 0.5rem 0; color: var(--accent-color);"><strong>⚠️ SAVE YOUR PRIVATE KEY SECURELY!</strong></p>
+                    <p style="margin: 0 0 0.5rem 0; font-size: 0.85rem; opacity: 0.8;">You need this to vote. It will not be shown again.</p>
+                    <p style="margin: 0; font-size: 0.75rem;"><strong>Your Public Key (Voter ID):</strong><br>
+                    <code style="font-size: 0.7rem; word-break: break-all;">${data.public_key.substring(0, 80)}...</code></p>
+                `;
+                showMessage('Key pair generated! Your private key is in the field below.', 'success');
+            } else {
+                showMessage('Failed to generate keys', 'error');
+            }
+        } catch (err) {
+            showMessage('Network error', 'error');
+        }
+
+        generateKeysBtn.disabled = false;
+        generateKeysBtn.textContent = '🔑 Generate New Key Pair';
+    });
 
     // Request OTP
     requestOtpBtn.addEventListener('click', async () => {
@@ -197,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/candidates');
             const data = await res.json();
             const select = document.getElementById('candidate');
+            const resultsSection = document.querySelector('.card:has(#resultsContainer)') || document.getElementById('resultsContainer')?.parentElement;
 
             // Clear existing options except first
             select.innerHTML = '<option value="" disabled selected>Select a candidate...</option>';
@@ -208,11 +241,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     opt.textContent = name;
                     select.appendChild(opt);
                 });
+                // Show results section when candidates exist
+                if (resultsSection) resultsSection.style.display = 'block';
             } else {
                 const opt = document.createElement('option');
                 opt.disabled = true;
                 opt.textContent = "No candidates registered";
                 select.appendChild(opt);
+                // Hide results section when no candidates
+                if (resultsSection) {
+                    resultsSection.style.display = 'none';
+                }
             }
         } catch (err) {
             console.error("Failed to fetch candidates", err);
