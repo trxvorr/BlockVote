@@ -39,6 +39,26 @@ class Wallet:
         except rsa.VerificationError:
             return False
 
+    @staticmethod
+    def load_private_key(priv_key_pem_str):
+        """
+        Load private key from PEM string or bytes.
+        :param priv_key_pem_str: <str> or <bytes>
+        :return: <rsa.PrivateKey>
+        """
+        if isinstance(priv_key_pem_str, str):
+            priv_key_pem_str = priv_key_pem_str.encode('utf-8')
+        return rsa.PrivateKey.load_pkcs1(priv_key_pem_str)
+
+    @staticmethod
+    def get_public_key_pem(priv_key):
+        """
+        Extract public key PEM from PrivateKey object.
+        :param priv_key: <rsa.PrivateKey>
+        :return: <bytes> Public Key PEM
+        """
+        return rsa.PublicKey(priv_key.n, priv_key.e).save_pkcs1()
+
     # --- Blind Signature Primitives ---
     
     @staticmethod

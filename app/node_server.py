@@ -1,12 +1,15 @@
 from sys import argv
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import threading
 import socket
 import time
 import requests
 from uuid import uuid4
+import json
+from textwrap import dedent
 
 from .blockchain import Blockchain
+from .wallet import Wallet
 
 # Initialize the Flask App
 app = Flask(__name__)
@@ -17,9 +20,6 @@ node_identifier = str(uuid4()).replace('-', '')
 # Initialize the Blockchain
 blockchain = Blockchain()
 
-@app.route('/', methods=['GET'])
-def home():
-    return "BlockVote Node is Running Successfully!", 200
 
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
@@ -222,6 +222,81 @@ def listen_for_peers(my_port):
                             # requests.post(f"{peer_address}/nodes/register", json={'nodes': [f"http://{my_ip}:{my_port}"]})
             except Exception as e:
                 print(f"Error listening for peers: {e}")
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/vote/submit', methods=['POST'])
+def submit_vote():
+    values = request.get_json()
+    
+    required = ['candidate', 'private_key']
+    if not all(k in values for k in required):
+        return jsonify({'message': 'Missing values'}), 400
+
+    candidate = values['candidate']
+    priv_key_pem = values['private_key']
+    election_id = values.get('election_id', 'default')
+
+    try:
+        # 1. Load keys
+        priv_key = Wallet.load_private_key(priv_key_pem)
+        pub_key_pem = Wallet.get_public_key_pem(priv_key)
+        
+        # 2. Derive Sender Address (Use PubKey hash or just PubKey PEM for now)
+        # Using PubKey PEM as sender ID for simplicity in this demo
+        sender = pub_key_pem.decode('utf-8')
+        
+        # 3. Create Transaction Data
+        transaction_data = {
+            'sender': sender,
+            'recipient': candidate,
+            'amount': 1,
+            'election_id': election_id
+        }
+        
+        # 4. Sign
+        message = json.dumps(transaction_data, sort_keys=True)
+        signature = Wallet.sign(message, priv_key).hex()
+        
+        # 5. Submit to Blockchain
+        # Note: We are doing a local call, bypassing the request.post usually done by clients.
+        # But we need to use the endpoint or direct method? 
+        # Direct method allows us to check return values easily, but endpoint logic has broadcast.
+        # Let's call direct method and then handle broadcast manually or via internal logic.
+        # Actually, let's just reuse the /transactions/new logic or call it internally?
+        # Re-implementing logic here is safer for "Hosted Wallet" specific handling.
+        
+        index, is_new = blockchain.new_transaction(sender, candidate, 1, bytes.fromhex(signature), pub_key_pem, election_id)
+        
+        if is_new:
+             # Broadcast (Simple version)
+             def broadcast_tx(tx_data):
+                for node in blockchain.nodes:
+                    try:
+                        node_url = f'http://{node}' if '://' not in node else node
+                        requests.post(f'{node_url}/transactions/new', json=tx_data, timeout=2)
+                    except:
+                        pass
+             
+             payload = {
+                 'sender': sender,
+                 'recipient': candidate,
+                 'amount': 1,
+                 'signature': signature,
+                 'public_key': sender, # sent as PEM string
+                 'election_id': election_id
+             }
+             threading.Thread(target=broadcast_tx, args=(payload,)).start()
+
+        return jsonify({'message': f'Vote submitted successfully! Block Index: {index}'}), 201
+
+    except ValueError as e:
+        return jsonify({'message': str(e)}), 400
+    except Exception as e:
+        return jsonify({'message': f'Error: {str(e)}'}), 500
 
 if __name__ == '__main__':
     # If the user provides a port number, use it. Otherwise, default to 5000.
