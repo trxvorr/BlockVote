@@ -187,6 +187,13 @@ if __name__ == '__main__':
     else:
         port = 5000
     
+    # Re-initialize blockchain with correct port for persistence file
+    # Note: We initialized 'blockchain' globally at the top. 
+    # Python globals can be modified if we are careful, or we just rely on default.
+    # To properly support persistence per port, we need to re-init here or change the global init structure.
+    # Changing the global variable 'blockchain' here works for the Flask app within this process.
+    blockchain.__init__(port)
+
     # Start P2P Discovery Threads
     t1 = threading.Thread(target=broadcast_presence, args=(port,), daemon=True)
     t2 = threading.Thread(target=listen_for_peers, args=(port,), daemon=True)

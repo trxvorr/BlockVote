@@ -1,3 +1,4 @@
+import os
 import hashlib
 import json
 import time
@@ -7,14 +8,47 @@ from .wallet import Wallet
 
 
 class Blockchain:
-    def __init__(self):
+    def __init__(self, port=5000):
         self.chain = []
         self.current_transactions = []
-        
-        # Create the genesis block
-        self.new_block(previous_hash='1', proof=100)
-        
         self.nodes = set()
+        self.data_dir = 'data'
+        self.file_path = f'{self.data_dir}/chain_{port}.json'
+        
+        # Create data directory if it doesn't exist
+        if not os.path.exists(self.data_dir):
+            os.makedirs(self.data_dir)
+
+        # Attempt to load state
+        if not self.load_state():
+            # Create the genesis block if no saved state
+            self.new_block(previous_hash='1', proof=100)
+    
+    def load_state(self):
+        if os.path.exists(self.file_path):
+            try:
+                with open(self.file_path, 'r') as f:
+                    data = json.load(f)
+                    self.chain = data.get('chain', [])
+                    self.current_transactions = data.get('transactions', [])
+                    self.nodes = set(data.get('nodes', []))
+                    return True
+            except Exception as e:
+                print(f"Error loading state: {e}")
+                return False
+        return False
+
+    def save_state(self):
+        data = {
+            'chain': self.chain,
+            'transactions': self.current_transactions,
+            'nodes': list(self.nodes)
+        }
+        try:
+            with open(self.file_path, 'w') as f:
+                json.dump(data, f, indent=4)
+        except Exception as e:
+            print(f"Error saving state: {e}")
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -36,6 +70,8 @@ class Blockchain:
         self.current_transactions = []
 
         self.chain.append(block)
+
+        self.save_state()
         return block
 
     def new_transaction(self, sender, recipient, amount, signature=None, public_key=None):
@@ -90,6 +126,8 @@ class Blockchain:
             # But "sender" is often the Hash of PubKey.
             # For this demo, let's keep it simple.
         })
+        
+        self.save_state()
 
         return self.last_block['index'] + 1
 
@@ -148,6 +186,8 @@ class Blockchain:
             self.nodes.add(parsed_url.path)
         else:
             raise ValueError('Invalid URL')
+            
+        self.save_state()
 
     def valid_chain(self, chain):
         """
@@ -219,6 +259,7 @@ class Blockchain:
         # Replace our chain if we discovered a new, valid chain longer than ours
         if new_chain:
             self.chain = new_chain
+            self.save_state()
             return True
 
         return False
