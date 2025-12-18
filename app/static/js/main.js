@@ -47,11 +47,62 @@ document.addEventListener('DOMContentLoaded', () => {
         message.className = `message ${type}`;
     }
 
+    // Chart.js Setup
+    let resultsChart = null;
+    const ctx = document.getElementById('resultsChart').getContext('2d');
+
+    function initChart() {
+        resultsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Votes',
+                    data: [],
+                    backgroundColor: 'rgba(108, 92, 231, 0.7)',
+                    borderColor: 'rgba(108, 92, 231, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#e0e0e0' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#e0e0e0' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#e0e0e0' } }
+                }
+            }
+        });
+    }
+    initChart();
+
     async function fetchResults() {
         try {
             const response = await fetch('/votes/count');
             const data = await response.json();
             resultsContainer.textContent = JSON.stringify(data, null, 2);
+
+            // Update chart with first election or 'default'
+            const electionId = Object.keys(data)[0] || 'default';
+            const votes = data[electionId] || {};
+
+            const labels = Object.keys(votes);
+            const counts = Object.values(votes);
+
+            resultsChart.data.labels = labels;
+            resultsChart.data.datasets[0].data = counts;
+            resultsChart.update();
+
         } catch (error) {
             resultsContainer.textContent = 'Failed to load results.';
         }

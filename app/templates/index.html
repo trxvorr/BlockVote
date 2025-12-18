@@ -53,11 +53,18 @@
 
             <div class="card results-preview">
                 <h2>Live Results</h2>
-                <div id="resultsContainer">Loading...</div>
+                <div class="chart-container" style="position: relative; height:300px; width:100%;">
+                    <canvas id="resultsChart"></canvas>
+                </div>
+                <details style="margin-top: 1rem;">
+                    <summary style="cursor: pointer; opacity: 0.7;">Raw JSON Data</summary>
+                    <div id="resultsContainer" style="margin-top: 0.5rem;">Loading...</div>
+                </details>
                 <button id="refreshBtn" class="secondary-btn">Refresh Results</button>
             </div>
         </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/js/main.js"></script>
 </body>
 

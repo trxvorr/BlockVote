@@ -1,10 +1,29 @@
 import pytest
+import os
 from unittest.mock import patch, MagicMock
 from app.blockchain import Blockchain
 
+TEST_PORT = 9992
+DATA_DIR = 'data'
+FILE_PATH = f'{DATA_DIR}/chain_{TEST_PORT}.json'
+FILE_PATH_OTHER = f'{DATA_DIR}/chain_9993.json'
+
 @pytest.fixture
 def blockchain():
-    return Blockchain()
+    # Cleanup before
+    if os.path.exists(FILE_PATH):
+        os.remove(FILE_PATH)
+    if os.path.exists(FILE_PATH_OTHER):
+        os.remove(FILE_PATH_OTHER)
+        
+    bc = Blockchain(port=TEST_PORT)
+    yield bc
+    
+    # Cleanup after
+    if os.path.exists(FILE_PATH):
+        os.remove(FILE_PATH)
+    if os.path.exists(FILE_PATH_OTHER):
+        os.remove(FILE_PATH_OTHER)
 
 def test_valid_chain(blockchain):
     # Genesis block should be valid
@@ -49,8 +68,8 @@ def test_resolve_conflicts_authoritative(blockchain):
 def test_resolve_conflicts_replaced(blockchain):
     blockchain.nodes.add("node2")
     
-    # Create a longer valid chain separately
-    other_bc = Blockchain()
+    # Create a longer valid chain separately with unique port
+    other_bc = Blockchain(port=9993)
     proof = other_bc.proof_of_work(other_bc.last_block['proof'])
     other_bc.new_block(proof, other_bc.hash(other_bc.last_block))
     

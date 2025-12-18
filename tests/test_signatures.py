@@ -1,11 +1,25 @@
 import pytest
 import json
+import os
 from app.blockchain import Blockchain
 from app.wallet import Wallet
 
+TEST_PORT = 9991
+DATA_DIR = 'data'
+FILE_PATH = f'{DATA_DIR}/chain_{TEST_PORT}.json'
+
 @pytest.fixture
 def blockchain():
-    return Blockchain()
+    # Cleanup before
+    if os.path.exists(FILE_PATH):
+        os.remove(FILE_PATH)
+        
+    bc = Blockchain(port=TEST_PORT)
+    yield bc
+    
+    # Cleanup after
+    if os.path.exists(FILE_PATH):
+        os.remove(FILE_PATH)
 
 def test_signed_transaction_success(blockchain):
     # 1. Generate keys
