@@ -37,3 +37,10 @@ def test_candidates_api(client):
     # 3. Get list again
     res = client.get('/candidates')
     assert 'Alice' in res.json['candidates']
+
+def test_stats_endpoint(client):
+    res = client.get('/stats')
+    assert res.status_code == 200
+    assert 'chain_length' in res.json
+    assert 'nodes_count' in res.json
+    assert res.json['chain_length'] >= 1  # At least genesis block

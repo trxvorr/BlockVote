@@ -84,7 +84,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function fetchStats() {
+        try {
+            const res = await fetch('/stats');
+            const data = await res.json();
+            document.getElementById('statsBlocks').textContent = `Blocks: ${data.chain_length}`;
+            document.getElementById('statsPeers').textContent = `Peers: ${data.nodes_count}`;
+        } catch (err) {
+            console.error("Failed to fetch stats", err);
+        }
+    }
+
     // Initial load
     fetchResults();
     fetchCandidates();
+    fetchStats();
+
+    // Auto-refresh every 5 seconds
+    setInterval(() => {
+        fetchResults();
+        fetchStats();
+    }, 5000);
 });

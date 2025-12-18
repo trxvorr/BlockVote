@@ -244,6 +244,16 @@ def add_candidate():
     CANDIDATES.add(values['name'])
     return jsonify({'message': f"Candidate {values['name']} added"}), 201
 
+@app.route('/stats', methods=['GET'])
+def get_stats():
+    response = {
+        'chain_length': len(blockchain.chain),
+        'nodes_count': len(blockchain.nodes),
+        'last_block_index': blockchain.last_block['index'],
+        'node_id': node_identifier
+    }
+    return jsonify(response), 200
+
 @app.route('/')
 def index():
     return render_template('index.html')
