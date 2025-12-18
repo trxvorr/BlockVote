@@ -1,0 +1,28 @@
+{
+    "chain": [
+        {
+            "index": 1,
+            "timestamp": 1766017338.2693684,
+            "transactions": [],
+            "proof": 100,
+            "previous_hash": "1"
+        }
+    ],
+    "transactions": [
+        {
+            "sender": "sender",
+            "recipient": "recipient",
+            "amount": 100,
+            "signature": "5df3aac21bb1117a2a79ba1b9049b0aaad673cb061980d5dc8eb43aaec02d4f25ee2145cbb5ca04d53bff8784573f643222b65aac667d9eaa849f817b0eb17e036310a7ef64ed209905b4d7b5b32c8bccc7b3b3069e46777ce0e71a7df9c5d87ee1ec594e1fc3514e02ff75b4cec967cc691b35f61674364568db4cf59209d1947696a2c01b05fd210840460373bf2785f2d8dd73e42ea66b5f9cd4367542803864934ca859c227a957074c1baa42d938f62f99006f044aab1d9a650be0d8440bef38c6307abaab2ae63ee7ac80452e96ccb7eed1bf5d778b03263169bc86fa668c14004be8a67c771423721b934b2941cf93a052cb9161631cc845ce5671ddb"
+        },
+        {
+            "sender": "sender",
+            "recipient": "recipient",
+            "amount": 100,
+            "signature": "9bd2f470af2f94c045eecceaeda1726d3bc52731b993b8688999d0147e0c4ed7942ddce344bc9b38819413cb26f5be3ed40dc669016d37dca6438f883b13af82610978ee74d4b39850c4a893f46b13d900bc58ccf941054e0dcaefeaee02198f3c48b729b81cd5fb121410c1e99ac69600fdafa54cdd487f451a65d04312b652cf2647627444bd8a512b1ef7a4305585444f1433766ff864781a8073d7d0cdb273da24ea8b9f6c39dc467355758e7e6d2232e03bb313ef3fdc4b71e0725e85bc07275c2c95d1651637b033142f4ed4d3bde33a201e18c00908ff7bb8f5c801d9d59121f9f036d75f80ebaa791ad80ffef3ce12bbfb0fcca14a2520c80d6e2f79"
+        }
+    ],
+    "nodes": [
+        "peer-node:5000"
+    ]
+}

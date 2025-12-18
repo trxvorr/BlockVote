@@ -27,7 +27,7 @@ def test_signed_transaction_success(blockchain):
     signature = Wallet.sign(message, priv)
     
     # 4. Submit
-    idx = blockchain.new_transaction(sender, recipient, amount, signature, pub)
+    idx, _ = blockchain.new_transaction(sender, recipient, amount, signature, pub)
     assert idx == 2  # Genesis block is 1
 
 def test_signed_transaction_invalid_signature(blockchain):
@@ -50,5 +50,5 @@ def test_signed_transaction_missing_signature(blockchain):
 
 def test_mining_reward_skip(blockchain):
     # Sender '0' indicates mining reward, should skip sig check
-    idx = blockchain.new_transaction("0", "recipient_miner", 1)
+    idx, _ = blockchain.new_transaction("0", "recipient_miner", 1)
     assert idx == 2

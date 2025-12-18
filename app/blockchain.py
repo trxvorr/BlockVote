@@ -115,13 +115,25 @@ class Blockchain:
             if not Wallet.verify(message, signature, public_key):
                  raise ValueError("Invalid Transaction Signature")
 
+        # Check for duplicates using signature
+        # Mining rewards (sender='0') usually don't have signatures or have special handling.
+        # If signature is present, use it for uniqueness check.
+        # We transform to hex for storage compatibility/comparison.
+        sig_hex = signature.hex() if isinstance(signature, bytes) else signature
+        
+        if sender != '0':
+            for tx in self.current_transactions:
+                if tx.get('signature') == sig_hex:
+                    # Duplicate found
+                    return self.last_block['index'] + 1, False
+
         self.current_transactions.append({
             'sender': sender,
             'recipient': recipient,
             'amount': amount,
             # We don't necessarily need to store the signature in the chain for this simple demo,
             # but usually you DO store it to prove validity later.
-            'signature': signature.hex() if isinstance(signature, bytes) else signature,
+            'signature': sig_hex,
             # public_key? Maybe too large to store every time if it's PEM. 
             # But "sender" is often the Hash of PubKey.
             # For this demo, let's keep it simple.
@@ -129,7 +141,7 @@ class Blockchain:
         
         self.save_state()
 
-        return self.last_block['index'] + 1
+        return self.last_block['index'] + 1, True
 
     def proof_of_work(self, last_proof):
         """

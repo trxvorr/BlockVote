@@ -50,10 +50,33 @@ def new_transaction():
                  public_key = public_key.encode('utf-8')
 
         # Create a new Transaction
-        index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'], signature, public_key)
+        index, is_new = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'], signature, public_key)
+        
+        if is_new:
+            # Broadcast to peers
+            # We do this asynchronously to avoid blocking
+            def broadcast_tx(tx_data):
+                for node in blockchain.nodes:
+                    try:
+                        node_url = f'http://{node}' if '://' not in node else node
+                        # POST to peer's /transactions/new
+                        # We send the raw values we received
+                        requests.post(f'{node_url}/transactions/new', json=tx_data, timeout=2)
+                    except:
+                        pass
+            
+            # Start broadcast thread
+            threading.Thread(target=broadcast_tx, args=(values,)).start()
 
-        response = {'message': f'Transaction will be added to Block {index}'}
-        return jsonify(response), 201
+        if is_new:
+            message = f'Transaction will be added to Block {index}'
+            status_code = 201
+        else:
+            message = f'Transaction already exists in Block {index}'
+            status_code = 200
+
+        response = {'message': message}
+        return jsonify(response), status_code
     except ValueError as e:
         return str(e), 400
     except Exception as e:
