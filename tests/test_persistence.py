@@ -31,7 +31,7 @@ def test_save_and_load_state(clean_persistence):
     recipient = "recipient"
     amount = 100
     
-    message = json.dumps({'sender': sender, 'recipient': recipient, 'amount': amount}, sort_keys=True)
+    message = json.dumps({'sender': sender, 'recipient': recipient, 'amount': amount, 'election_id': 'default'}, sort_keys=True)
     signature = Wallet.sign(message, priv)
     
     bc.nodes.add("http://127.0.0.1:8000")

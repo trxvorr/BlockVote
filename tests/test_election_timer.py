@@ -25,13 +25,13 @@ def blockchain():
 def test_election_window_not_set(blockchain):
     # Should allow voting
     pub, priv = Wallet.generate_keys()
-    sig = Wallet.sign(json.dumps({'sender': "s", 'recipient': "r", 'amount': 1}, sort_keys=True), priv)
+    sig = Wallet.sign(json.dumps({'sender': "s", 'recipient': "r", 'amount': 1, 'election_id': 'default'}, sort_keys=True), priv)
     blockchain.new_transaction("s", "r", 1, sig, pub)
     assert len(blockchain.current_transactions) == 1
 
 def test_vote_before_election_start(blockchain):
     pub, priv = Wallet.generate_keys()
-    sig = Wallet.sign(json.dumps({'sender': "s", 'recipient': "r", 'amount': 1}, sort_keys=True), priv)
+    sig = Wallet.sign(json.dumps({'sender': "s", 'recipient': "r", 'amount': 1, 'election_id': 'default'}, sort_keys=True), priv)
     
     # Set window to start in 1 hour
     now = time.time()
@@ -44,7 +44,7 @@ def test_vote_before_election_start(blockchain):
 
 def test_vote_after_election_end(blockchain):
     pub, priv = Wallet.generate_keys()
-    sig = Wallet.sign(json.dumps({'sender': "s", 'recipient': "r", 'amount': 1}, sort_keys=True), priv)
+    sig = Wallet.sign(json.dumps({'sender': "s", 'recipient': "r", 'amount': 1, 'election_id': 'default'}, sort_keys=True), priv)
     
     # Set window ending 1 hour ago
     now = time.time()
@@ -57,7 +57,7 @@ def test_vote_after_election_end(blockchain):
 
 def test_vote_during_election(blockchain):
     pub, priv = Wallet.generate_keys()
-    sig = Wallet.sign(json.dumps({'sender': "s", 'recipient': "r", 'amount': 1}, sort_keys=True), priv)
+    sig = Wallet.sign(json.dumps({'sender': "s", 'recipient': "r", 'amount': 1, 'election_id': 'default'}, sort_keys=True), priv)
     
     # Set window surrounding now
     now = time.time()

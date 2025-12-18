@@ -16,10 +16,14 @@ def test_signed_transaction_success(blockchain):
     recipient = "recipient_address"
     amount = 5
     
+    # Sign message
+    # Updated: Must include 'election_id' or match what new_transaction expects
+    # new_transaction defaults election_id='default', so we must sign that.
     transaction_data = {
         'sender': sender,
         'recipient': recipient,
-        'amount': amount
+        'amount': amount,
+        'election_id': 'default'
     }
     message = json.dumps(transaction_data, sort_keys=True)
     

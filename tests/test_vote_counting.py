@@ -36,13 +36,13 @@ def test_vote_counting_basic(blockchain):
     pub, priv = Wallet.generate_keys()
     
     # Tx 1: A receives 1
+    # Note: explicit 'election_id': 'default' for signing
     blockchain.new_transaction("voter1", "CandidateA", 1, 
-                              Wallet.sign(json.dumps({'sender': "voter1", 'recipient': "CandidateA", 'amount': 1}, sort_keys=True), priv), pub)
+                              Wallet.sign(json.dumps({'sender': "voter1", 'recipient': "CandidateA", 'amount': 1, 'election_id': 'default'}, sort_keys=True), priv), pub)
     
-    # Tx 2: B receives 2 (weighted?) 
-    # Or multiple txs? Let's do amount=1 for standard voting simulation mostly.
+    # Tx 2: B receives 1
     blockchain.new_transaction("voter2", "CandidateB", 1,
-                              Wallet.sign(json.dumps({'sender': "voter2", 'recipient': "CandidateB", 'amount': 1}, sort_keys=True), priv), pub)
+                              Wallet.sign(json.dumps({'sender': "voter2", 'recipient': "CandidateB", 'amount': 1, 'election_id': 'default'}, sort_keys=True), priv), pub)
     
     # Mine block to confirm transactions
     last_block = blockchain.last_block
@@ -52,7 +52,7 @@ def test_vote_counting_basic(blockchain):
     # Add another block
     # Tx 3: A receives another 1
     blockchain.new_transaction("voter3", "CandidateA", 1,
-                              Wallet.sign(json.dumps({'sender': "voter3", 'recipient': "CandidateA", 'amount': 1}, sort_keys=True), priv), pub)
+                              Wallet.sign(json.dumps({'sender': "voter3", 'recipient': "CandidateA", 'amount': 1, 'election_id': 'default'}, sort_keys=True), priv), pub)
     
     last_block = blockchain.last_block
     proof = blockchain.proof_of_work(last_block['proof'])
@@ -61,8 +61,9 @@ def test_vote_counting_basic(blockchain):
     # Count
     results = blockchain.count_votes()
     
-    assert results['CandidateA'] == 2
-    assert results['CandidateB'] == 1
+    # Updated structure: {'default': {'CandidateA': 2, 'CandidateB': 1}}
+    assert results['default']['CandidateA'] == 2
+    assert results['default']['CandidateB'] == 1
 
 def test_vote_counting_excludes_mining_rewards(blockchain):
     # Mine a block (creates reward tx)

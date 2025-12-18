@@ -49,8 +49,10 @@ def new_transaction():
              if isinstance(public_key, str):
                  public_key = public_key.encode('utf-8')
 
+        election_id = values.get('election_id', 'default')
+
         # Create a new Transaction
-        index, is_new = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'], signature, public_key)
+        index, is_new = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'], signature, public_key, election_id)
         
         if is_new:
             # Broadcast to peers

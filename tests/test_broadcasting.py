@@ -16,7 +16,7 @@ def test_transaction_broadcasting(client):
     sender = "sender"
     recipient = "recipient"
     amount = 100
-    message = json.dumps({'sender': sender, 'recipient': recipient, 'amount': amount}, sort_keys=True)
+    message = json.dumps({'sender': sender, 'recipient': recipient, 'amount': amount, 'election_id': 'default'}, sort_keys=True)
     signature = Wallet.sign(message, priv).hex()
     
     # Mock requests.post
@@ -27,7 +27,8 @@ def test_transaction_broadcasting(client):
             'recipient': recipient,
             'amount': amount,
             'signature': signature,
-            'public_key': pub.decode()
+            'public_key': pub.decode(),
+            'election_id': 'default'
         }
         
         # Add a node to broadcast to

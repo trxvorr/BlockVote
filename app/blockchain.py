@@ -91,7 +91,7 @@ class Blockchain:
         self.save_state()
         return block
 
-    def new_transaction(self, sender, recipient, amount, signature=None, public_key=None):
+    def new_transaction(self, sender, recipient, amount, signature=None, public_key=None, election_id='default'):
         """
         Creates a new transaction to go into the next mined Block
         :param sender: <str> Address of the Sender
@@ -99,6 +99,7 @@ class Blockchain:
         :param amount: <int> Amount
         :param signature: <bytes> (Optional) SHA-256 signature
         :param public_key: <bytes> (Optional) Public key to verify signature
+        :param election_id: <str> (Optional) ID of the election
         :return: <int> The index of the Block that will hold this transaction
         """
         
@@ -115,27 +116,13 @@ class Blockchain:
             if not signature or not public_key:
                 raise ValueError("Transaction signature and public key are required.")
             
-            # Reconstruct the message that was signed. 
-            # Ideally this matches exactly what the client signed.
-            # Simple format: sender+recipient+str(amount) or json? 
-            # Let's use ordered json string of data to be safe and consistent.
             transaction_data = {
                 'sender': sender,
                 'recipient': recipient,
-                'amount': amount
+                'amount': amount,
+                'election_id': election_id
             }
-            # Message is the string representation
             message = json.dumps(transaction_data, sort_keys=True)
-            
-            # Since signature and public_key come in likely as hex or string from API, 
-            # we might need to handle conversion. But internally Python usually deals with bytes for crypto.
-            # Let's assume they are passed as appropriate types (bytes) or handle conversion if strings.
-            # If coming from our API, they might be hex strings or PEM strings.
-            # Wallet.verify expects bytes for signature and PEM bytes for key.
-            
-            # However, new_transaction is internal logic. The API layer (node_server) should handle parsing?
-            # Or we handle it here.
-            # Let's assume they are passed as is from the caller. 
             
             if not Wallet.verify(message, signature, public_key):
                  raise ValueError("Invalid Transaction Signature")
@@ -156,6 +143,7 @@ class Blockchain:
             'sender': sender,
             'recipient': recipient,
             'amount': amount,
+            'election_id': election_id,
             # We don't necessarily need to store the signature in the chain for this simple demo,
             # but usually you DO store it to prove validity later.
             'signature': sig_hex,
@@ -305,7 +293,7 @@ class Blockchain:
         """
         Count votes from the blockchain.
         Exclude mining rewards (sender='0').
-        :return: <dict> {'CandidateA': count, ...}
+        :return: <dict> {election_id: {'CandidateA': count, ...}}
         """
         results = {}
         
@@ -315,15 +303,17 @@ class Blockchain:
                 if tx['sender'] == '0':
                     continue
                 
+                # Default to 'default' if missing (for backward compatibility)
+                election_id = tx.get('election_id', 'default')
                 candidate = tx['recipient']
-                # We can sum 'amount' if we support weighted voting, 
-                # but standard is 1 vote per transaction.
-                # Let's count 'amount' for flexibility (e.g. Quadrtic Voting later?? for now simple sum)
                 count = tx['amount']
                 
-                if candidate in results:
-                    results[candidate] += count
+                if election_id not in results:
+                    results[election_id] = {}
+                
+                if candidate in results[election_id]:
+                    results[election_id][candidate] += count
                 else:
-                    results[candidate] = count
+                    results[election_id][candidate] = count
         
         return results
