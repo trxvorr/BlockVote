@@ -467,7 +467,7 @@ def submit_vote():
         
         # 4. Sign
         message = json.dumps(transaction_data, sort_keys=True)
-        signature = Wallet.sign(message, priv_key).hex()
+        signature = Wallet.sign(message, priv_key_pem).hex()
         
         # 5. Submit to Blockchain
         # Note: We are doing a local call, bypassing the request.post usually done by clients.

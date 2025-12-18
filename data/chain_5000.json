@@ -437,11 +437,11 @@
         }
     ],
     "nodes": [
-        "192.168.0.6:5000",
-        "peer-node:5000",
         "192.168.0.5:5000",
-        "node2"
+        "peer-node:5000",
+        "node2",
+        "192.168.0.6:5000"
     ],
-    "election_start": null,
-    "election_end": null
+    "election_start": 1766029972,
+    "election_end": 1766033572
 }
