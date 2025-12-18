@@ -224,6 +224,26 @@ def listen_for_peers(my_port):
                 print(f"Error listening for peers: {e}")
 
 
+# In-memory candidate registry (for demo purposes)
+CANDIDATES = set()
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+@app.route('/candidates', methods=['GET'])
+def get_candidates():
+    return jsonify({'candidates': list(CANDIDATES)}), 200
+
+@app.route('/candidates/add', methods=['POST'])
+def add_candidate():
+    values = request.get_json()
+    if not values or 'name' not in values:
+        return 'Missing name', 400
+    
+    CANDIDATES.add(values['name'])
+    return jsonify({'message': f"Candidate {values['name']} added"}), 201
+
 @app.route('/')
 def index():
     return render_template('index.html')

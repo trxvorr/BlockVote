@@ -18,3 +18,22 @@ def test_frontend_home(client):
 def test_frontend_submit_missing_params(client):
     response = client.post('/vote/submit', json={})
     assert response.status_code == 400
+
+def test_admin_dashboard_loads(client):
+    response = client.get('/admin')
+    assert response.status_code == 200
+    assert b'Admin Panel' in response.data
+
+def test_candidates_api(client):
+    # 1. Get empty list
+    res = client.get('/candidates')
+    assert res.status_code == 200
+    assert res.json['candidates'] == []
+    
+    # 2. Add candidate
+    res = client.post('/candidates/add', json={'name': 'Alice'})
+    assert res.status_code == 201
+    
+    # 3. Get list again
+    res = client.get('/candidates')
+    assert 'Alice' in res.json['candidates']

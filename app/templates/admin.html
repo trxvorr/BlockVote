@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockVote - Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .action-card h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">BlockVote Report</div>
+            <div class="status">Admin Panel</div>
+        </header>
+
+        <main>
+            <h1>System Management</h1>
+            <p class="subtitle">Control elections and blockchain nodes.</p>
+
+            <div class="admin-grid">
+                <!-- Data Management -->
+                <div class="action-card">
+                    <h3>Candidate Management</h3>
+                    <form id="addCandidateForm">
+                        <div class="form-group">
+                            <label>New Candidate Name</label>
+                            <input type="text" name="name" required placeholder="e.g. Alice">
+                        </div>
+                        <button type="submit">Add Candidate</button>
+                    </form>
+                    <div id="candidateList" style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;"></div>
+                </div>
+
+                <!-- Election Window -->
+                <div class="action-card">
+                    <h3>Election Window</h3>
+                    <form id="setTimerForm">
+                        <div class="form-group">
+                            <label>Start Timestamp</label>
+                            <input type="number" name="start_time" required placeholder="Unix Timestamp">
+                        </div>
+                        <div class="form-group">
+                            <label>End Timestamp</label>
+                            <input type="number" name="end_time" required placeholder="Unix Timestamp">
+                        </div>
+                        <button type="button" id="setWindowNowBtn" class="secondary-btn"
+                            style="margin-bottom: 1rem;">Set Window: Now -> +1 Hour</button>
+                        <button type="submit">Configure Timer</button>
+                    </form>
+                </div>
+
+                <!-- Node Operations -->
+                <div class="action-card">
+                    <h3>Node Operations</h3>
+                    <button id="mineBtn" style="margin-bottom: 1rem;">Mine Pending Transactions</button>
+                    <button id="resolveBtn" class="secondary-btn">Resolve Conflicts (Consensus)</button>
+                </div>
+            </div>
+
+            <div id="adminMessage" class="message hidden" style="margin-top: 2rem;"></div>
+
+        </main>
+    </div>
+    <script src="/static/js/admin.js"></script>
+</body>
+
+</html>

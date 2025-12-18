@@ -57,6 +57,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function fetchCandidates() {
+        try {
+            const res = await fetch('/candidates');
+            const data = await res.json();
+            const select = document.getElementById('candidate');
+
+            // Clear existing options except first
+            select.innerHTML = '<option value="" disabled selected>Select a candidate...</option>';
+
+            if (data.candidates && data.candidates.length > 0) {
+                data.candidates.forEach(name => {
+                    const opt = document.createElement('option');
+                    opt.value = name;
+                    opt.textContent = name;
+                    select.appendChild(opt);
+                });
+            } else {
+                const opt = document.createElement('option');
+                opt.disabled = true;
+                opt.textContent = "No candidates registered";
+                select.appendChild(opt);
+            }
+        } catch (err) {
+            console.error("Failed to fetch candidates", err);
+        }
+    }
+
     // Initial load
     fetchResults();
+    fetchCandidates();
 });

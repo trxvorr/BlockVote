@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -22,24 +24,28 @@
                 <form id="voteForm">
                     <div class="form-group">
                         <label for="electionId">Election ID</label>
-                        <input type="text" id="electionId" name="electionId" placeholder="e.g. invalid-2025" value="default">
+                        <input type="text" id="electionId" name="electionId" placeholder="e.g. invalid-2025"
+                            value="default">
                     </div>
 
                     <div class="form-group">
                         <label for="candidate">Candidate Name</label>
-                        <input type="text" id="candidate" name="candidate" placeholder="e.g. Alice" required>
+                        <select id="candidate" name="candidate" required>
+                            <option value="" disabled selected>Select a candidate...</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
                         <label for="privateKey">Your Private Key (PEM format)</label>
-                        <textarea id="privateKey" name="privateKey" rows="5" placeholder="-----BEGIN RSA PRIVATE KEY-----..." required></textarea>
+                        <textarea id="privateKey" name="privateKey" rows="5"
+                            placeholder="-----BEGIN RSA PRIVATE KEY-----..." required></textarea>
                     </div>
 
                     <button type="submit" id="submitBtn">Submit Vote</button>
                     <div id="message" class="message hidden"></div>
                 </form>
             </div>
-            
+
             <div class="card results-preview">
                 <h2>Live Results</h2>
                 <div id="resultsContainer">Loading...</div>
@@ -49,4 +55,5 @@
     </div>
     <script src="/static/js/main.js"></script>
 </body>
+
 </html>
