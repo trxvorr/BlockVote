@@ -156,6 +156,11 @@ def register_nodes():
 def get_nodes():
     return jsonify({'nodes': list(blockchain.nodes)}), 200
 
+@app.route('/votes/count', methods=['GET'])
+def count_votes():
+    results = blockchain.count_votes()
+    return jsonify(results), 200
+
 # UDP port for broadcasting presence
 BROADCAST_PORT = 54321
 peer_discovery_active = True

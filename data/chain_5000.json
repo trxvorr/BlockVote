@@ -6,22 +6,69 @@
             "transactions": [],
             "proof": 100,
             "previous_hash": "1"
-        }
-    ],
-    "transactions": [
-        {
-            "sender": "sender",
-            "recipient": "recipient",
-            "amount": 100,
-            "signature": "5df3aac21bb1117a2a79ba1b9049b0aaad673cb061980d5dc8eb43aaec02d4f25ee2145cbb5ca04d53bff8784573f643222b65aac667d9eaa849f817b0eb17e036310a7ef64ed209905b4d7b5b32c8bccc7b3b3069e46777ce0e71a7df9c5d87ee1ec594e1fc3514e02ff75b4cec967cc691b35f61674364568db4cf59209d1947696a2c01b05fd210840460373bf2785f2d8dd73e42ea66b5f9cd4367542803864934ca859c227a957074c1baa42d938f62f99006f044aab1d9a650be0d8440bef38c6307abaab2ae63ee7ac80452e96ccb7eed1bf5d778b03263169bc86fa668c14004be8a67c771423721b934b2941cf93a052cb9161631cc845ce5671ddb"
         },
         {
-            "sender": "sender",
-            "recipient": "recipient",
-            "amount": 100,
-            "signature": "9bd2f470af2f94c045eecceaeda1726d3bc52731b993b8688999d0147e0c4ed7942ddce344bc9b38819413cb26f5be3ed40dc669016d37dca6438f883b13af82610978ee74d4b39850c4a893f46b13d900bc58ccf941054e0dcaefeaee02198f3c48b729b81cd5fb121410c1e99ac69600fdafa54cdd487f451a65d04312b652cf2647627444bd8a512b1ef7a4305585444f1433766ff864781a8073d7d0cdb273da24ea8b9f6c39dc467355758e7e6d2232e03bb313ef3fdc4b71e0725e85bc07275c2c95d1651637b033142f4ed4d3bde33a201e18c00908ff7bb8f5c801d9d59121f9f036d75f80ebaa791ad80ffef3ce12bbfb0fcca14a2520c80d6e2f79"
+            "index": 2,
+            "timestamp": 1766017902.3186345,
+            "transactions": [
+                {
+                    "sender": "sender",
+                    "recipient": "recipient",
+                    "amount": 100,
+                    "signature": "5df3aac21bb1117a2a79ba1b9049b0aaad673cb061980d5dc8eb43aaec02d4f25ee2145cbb5ca04d53bff8784573f643222b65aac667d9eaa849f817b0eb17e036310a7ef64ed209905b4d7b5b32c8bccc7b3b3069e46777ce0e71a7df9c5d87ee1ec594e1fc3514e02ff75b4cec967cc691b35f61674364568db4cf59209d1947696a2c01b05fd210840460373bf2785f2d8dd73e42ea66b5f9cd4367542803864934ca859c227a957074c1baa42d938f62f99006f044aab1d9a650be0d8440bef38c6307abaab2ae63ee7ac80452e96ccb7eed1bf5d778b03263169bc86fa668c14004be8a67c771423721b934b2941cf93a052cb9161631cc845ce5671ddb"
+                },
+                {
+                    "sender": "sender",
+                    "recipient": "recipient",
+                    "amount": 100,
+                    "signature": "9bd2f470af2f94c045eecceaeda1726d3bc52731b993b8688999d0147e0c4ed7942ddce344bc9b38819413cb26f5be3ed40dc669016d37dca6438f883b13af82610978ee74d4b39850c4a893f46b13d900bc58ccf941054e0dcaefeaee02198f3c48b729b81cd5fb121410c1e99ac69600fdafa54cdd487f451a65d04312b652cf2647627444bd8a512b1ef7a4305585444f1433766ff864781a8073d7d0cdb273da24ea8b9f6c39dc467355758e7e6d2232e03bb313ef3fdc4b71e0725e85bc07275c2c95d1651637b033142f4ed4d3bde33a201e18c00908ff7bb8f5c801d9d59121f9f036d75f80ebaa791ad80ffef3ce12bbfb0fcca14a2520c80d6e2f79"
+                },
+                {
+                    "sender": "voter1",
+                    "recipient": "CandidateA",
+                    "amount": 1,
+                    "signature": "31ababb63392be0d1bb1b35d460a31033502da1ac3ab913208dfed8f7ffc2e31d24453572516cb1fd0a2efb9347b5443c0a83656d2afb74d27614c51de0736f59e99df47ac4f265c3d7c8062311b7b0246f9cf726929d40b9ed56f6462a8bf974c5d56b612d23321d81bd1766228af05bc6cc52bd75a27758ad6f5a7f719b83896c93b5ed89c129d1dd22bf27f6d298f9303c2bec296a8fe7a77bba1e618ddef5afe4da6a3faa3ad303508ed90b72fc01aecfaa3ab574418515f1db21187e201d9cf1a49ad26f9d38dd0db11f3504ac906426a4cee382e6ffaf8761cf73b5ac2953a9544221f706412a2573b1b4a8aa82e09d2be34b3cb22b2cb8081b714e829"
+                },
+                {
+                    "sender": "voter2",
+                    "recipient": "CandidateB",
+                    "amount": 1,
+                    "signature": "8871e21caca217023ca73c4f851581a842b89aec58738b84727df0a625a814937206f37b44c6fb7ab1cc1f96fdde3dff50e5562d1aa9e99645a5ee1c1e517fb7c6ea873815eaa7039ebfc196eacb2b104276a9e648826477bd87b70e22b273d2b6497eb665c6ed47801235707d384843ba6c8534cd5ead9ae3dc2c7ba38768f8b7363f67a7a9725089e5175b76fa836ef871055123556f605d031be7aca06b85a94c1794d9abaf1788304bbedb1c81f1a22b5265a8374b6535b55cfbada97b73a2edcb1f9daaa218474fbd3169fad53cffd962e21d076d39270c2892bb1074c5e4384890c6ecf3a8bc7a72f16305c2dc9294dff79a8f1da2d24af80e64ebffdc"
+                }
+            ],
+            "proof": 35293,
+            "previous_hash": "e11b5ad8d38b2bc375f684345f8b725e2f022a909ec47575db0dc0747deea208"
+        },
+        {
+            "index": 3,
+            "timestamp": 1766017902.4050677,
+            "transactions": [
+                {
+                    "sender": "voter3",
+                    "recipient": "CandidateA",
+                    "amount": 1,
+                    "signature": "847440ebbd2cc52e6027323d4b981b1c4143305e1cde6c993eacd424a85b58071d621ad0558cf74d3992bee8aa6b95d074de3fd8bb20ccf60e1e19a2b2a3f3e8bf834de9e03f3842cc58936e8826a9276acd06353e262cee7e84f6487ec34af9fe5fdd55e4ac788dd2268701031abeaf6368f590081df35e81ec3ca1ac6876d0bd1d9be6ef079d5d29d54717bc31c4ec60a8d6499bbdb5ab977086db59da259d725340e29dd9a4bf8d05b702bee43cc8290353e7756ed5591468971b035d0c6b8a43f0845c03cc47f7dff2327b6d621489df46bfad3ddd9cae467b5dad30b584a76d030a29a1eb5490c195b387c307c1c62eec894fba7e7b4bc97b370a35600a"
+                }
+            ],
+            "proof": 35089,
+            "previous_hash": "c3d765b01af2157370795fc69156d2d9dc83bae1925410512d55d8a28ec4c888"
+        },
+        {
+            "index": 4,
+            "timestamp": 1766017902.6188312,
+            "transactions": [
+                {
+                    "sender": "0",
+                    "recipient": "miner_id",
+                    "amount": 1,
+                    "signature": null
+                }
+            ],
+            "proof": 119678,
+            "previous_hash": "9925d0ad8653eff9b35ff9c1883cd1424dee90ee08edd82dbf227b53a003da0d"
         }
     ],
+    "transactions": [],
     "nodes": [
         "peer-node:5000"
     ]

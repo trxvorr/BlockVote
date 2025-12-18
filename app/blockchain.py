@@ -275,3 +275,30 @@ class Blockchain:
             return True
 
         return False
+
+    def count_votes(self):
+        """
+        Count votes from the blockchain.
+        Exclude mining rewards (sender='0').
+        :return: <dict> {'CandidateA': count, ...}
+        """
+        results = {}
+        
+        # Iterate over all blocks in the chain
+        for block in self.chain:
+            for tx in block['transactions']:
+                if tx['sender'] == '0':
+                    continue
+                
+                candidate = tx['recipient']
+                # We can sum 'amount' if we support weighted voting, 
+                # but standard is 1 vote per transaction.
+                # Let's count 'amount' for flexibility (e.g. Quadrtic Voting later?? for now simple sum)
+                count = tx['amount']
+                
+                if candidate in results:
+                    results[candidate] += count
+                else:
+                    results[candidate] = count
+        
+        return results
