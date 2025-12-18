@@ -517,8 +517,14 @@ def submit_vote():
              }
              threading.Thread(target=broadcast_tx, args=(payload,)).start()
 
+        # Auto-mine the vote into a block
+        last_block = blockchain.last_block
+        proof = blockchain.proof_of_work(last_block['proof'])
+        blockchain.new_block(proof, blockchain.hash(last_block))
+        log_activity('INFO', f"Auto-mined block {blockchain.last_block['index']} with vote for '{candidate}'")
+
         log_activity('INFO', f"Vote submitted for '{candidate}' in election '{election_id}'")
-        return jsonify({'message': f'Vote submitted successfully! Block Index: {index}'}), 201
+        return jsonify({'message': f'Vote submitted and mined! Block Index: {blockchain.last_block["index"]}'}), 201
 
     except ValueError as e:
         log_activity('WARNING', f"Vote failed: {str(e)}")
