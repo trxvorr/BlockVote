@@ -30,7 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (res.ok) {
                 otpSection.style.display = 'block';
-                verificationStatus.textContent = data.message;
+                // Show OTP prominently (dev mode - SMTP not configured)
+                if (data.otp) {
+                    verificationStatus.innerHTML = `<strong style="color: var(--accent-color);">⚠️ SMTP not configured (Dev Mode)</strong><br>Your OTP: <code style="background: rgba(108,92,231,0.3); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 1.2rem; font-weight: bold;">${data.otp}</code>`;
+                    // Auto-fill OTP input
+                    document.getElementById('otpCode').value = data.otp;
+                } else {
+                    verificationStatus.textContent = data.message;
+                }
                 verificationStatus.className = 'message success';
             } else {
                 showMessage(data.message, 'error');

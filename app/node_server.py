@@ -381,7 +381,13 @@ def request_otp():
     print(f"{'='*50}\n", flush=True)
     
     log_activity('INFO', f"OTP requested for {email}")
-    return jsonify({'message': 'OTP sent to your email (check console)'}), 200
+    
+    # Return OTP in response (SMTP not configured - development mode)
+    return jsonify({
+        'message': f'SMTP not configured. Your OTP is: {otp}',
+        'otp': otp,  # Include in response for frontend display
+        'note': 'In production, this would be sent via email.'
+    }), 200
 
 @app.route('/auth/verify-otp', methods=['POST'])
 def verify_otp():
