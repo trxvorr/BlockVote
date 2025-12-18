@@ -106,7 +106,7 @@ def new_transaction():
                         # POST to peer's /transactions/new
                         # We send the raw values we received
                         requests.post(f'{node_url}/transactions/new', json=tx_data, timeout=2)
-                    except:
+                    except Exception:
                         pass
             
             # Start broadcast thread
@@ -326,6 +326,21 @@ def add_candidate():
     log_activity('INFO', f"Candidate '{values['name']}' added")
     return jsonify({'message': f"Candidate {values['name']} added"}), 201
 
+@app.route('/candidates/remove', methods=['POST'])
+@require_admin
+def remove_candidate():
+    values = request.get_json()
+    if not values or 'name' not in values:
+        return jsonify({'message': 'Missing name'}), 400
+    
+    name = values['name']
+    if name in CANDIDATES:
+        CANDIDATES.discard(name)
+        log_activity('INFO', f"Candidate '{name}' removed")
+        return jsonify({'message': f"Candidate {name} removed"}), 200
+    else:
+        return jsonify({'message': f"Candidate {name} not found"}), 404
+
 @app.route('/stats', methods=['GET'])
 def get_stats():
     response = {
@@ -359,12 +374,13 @@ def request_otp():
     OTP_STORE[email] = {'otp': otp, 'expires': expires}
     
     # Simulate email by logging to console
-    print(f"\n{'='*50}")
-    print(f"[OTP] Email: {email}")
-    print(f"[OTP] Code: {otp}")
-    print("[OTP] Expires in 5 minutes")
-    print(f"{'='*50}\n")
+    print(f"\n{'='*50}", flush=True)
+    print(f"[OTP] Email: {email}", flush=True)
+    print(f"[OTP] Code: {otp}", flush=True)
+    print("[OTP] Expires in 5 minutes", flush=True)
+    print(f"{'='*50}\n", flush=True)
     
+    log_activity('INFO', f"OTP requested for {email}")
     return jsonify({'message': 'OTP sent to your email (check console)'}), 200
 
 @app.route('/auth/verify-otp', methods=['POST'])
@@ -454,7 +470,7 @@ def submit_vote():
                     try:
                         node_url = f'http://{node}' if '://' not in node else node
                         requests.post(f'{node_url}/transactions/new', json=tx_data, timeout=2)
-                    except:
+                    except Exception:
                         pass
              
              payload = {

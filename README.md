@@ -6,6 +6,7 @@
 * **Immutable Ledger:** Votes are recorded on a blockchain, making them impossible to alter or delete.
 * **Proof of Work:** Mining secures the network against spam attacks.
 * **Blind Signatures:** Mathematically proves a vote is valid while keeping the voter's choice secret.
+* **Shamir Secret Sharing:** Split private keys into multiple shares for secure backup and recovery.
 * **P2P Network:** Runs on a distributed network of nodes with automatic peer discovery.
 * **Email OTP Authentication:** Two-factor verification before voting.
 * **Tamper Evidence:** Real-time integrity checks detect chain corruption.
@@ -15,7 +16,7 @@
 ## 🛠️ Tech Stack
 * **Language:** Python 3.x
 * **Framework:** Flask (Web Server)
-* **Cryptography:** `rsa`, `hashlib` (SHA-256), Blind Signatures
+* **Cryptography:** `rsa`, `hashlib` (SHA-256), Blind Signatures, Shamir Secret Sharing
 * **Frontend:** HTML5, CSS3, JavaScript, Chart.js
 * **Testing:** pytest (68+ tests)
 

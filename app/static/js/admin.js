@@ -40,13 +40,40 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             const div = document.getElementById('candidateList');
             if (data.candidates.length > 0) {
-                div.textContent = "Registered: " + data.candidates.join(", ");
+                div.innerHTML = '<strong>Registered Candidates:</strong><ul style="margin: 0.5rem 0; padding-left: 1.5rem;">' +
+                    data.candidates.map(c =>
+                        `<li style="margin: 0.3rem 0; display: flex; justify-content: space-between; align-items: center;">
+                            <span>${c}</span>
+                            <button onclick="removeCandidate('${c}')" class="secondary-btn" style="width: auto; padding: 0.2rem 0.5rem; font-size: 0.8rem; margin-left: 1rem;">✕ Remove</button>
+                        </li>`
+                    ).join('') + '</ul>';
             } else {
-                div.textContent = "No candidates yet.";
+                div.innerHTML = '<em style="opacity: 0.7;">No candidates yet.</em>';
             }
         } catch (err) { }
     }
     updateCandidateList();
+
+    // Remove candidate function (global)
+    window.removeCandidate = async function (name) {
+        if (!confirm(`Remove candidate "${name}"?`)) return;
+        try {
+            const res = await fetch('/candidates/remove', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showMessage(data.message, 'success');
+                updateCandidateList();
+            } else {
+                showMessage(data.message, 'error');
+            }
+        } catch (err) {
+            showMessage('Error removing candidate', 'error');
+        }
+    };
 
     // --- Election Timer ---
     const setTimerForm = document.getElementById('setTimerForm');

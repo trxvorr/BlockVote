@@ -33,7 +33,8 @@ class Shamir:
             num = 1
             den = 1
             for j in range(k):
-                if i == j: continue
+                if i == j:
+                    continue
                 xj = x_s[j]
                 
                 num = (num * (x - xj)) % prime
@@ -95,7 +96,6 @@ class Shamir:
         if not shares:
             return None
             
-        k = len(shares)
         num_chunks = len(shares[0][1])
         x_s = [s[0] for s in shares]
         

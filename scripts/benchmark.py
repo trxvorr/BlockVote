@@ -84,7 +84,7 @@ def benchmark_verification(blockchain):
     start = time.time()
     
     for _ in range(iterations):
-        result = blockchain.verify_integrity()
+        blockchain.verify_integrity()
     
     elapsed = time.time() - start
     per_check = (elapsed / iterations) * 1000

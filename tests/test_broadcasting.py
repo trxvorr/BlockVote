@@ -23,7 +23,7 @@ def test_transaction_broadcasting(client):
     signature = Wallet.sign(message, priv).hex()
     
     # Mock requests.post
-    with patch('requests.post') as mock_post:
+    with patch('requests.post'):  # noqa: F841
         # Create Payload
         payload = {
             'sender': sender,
