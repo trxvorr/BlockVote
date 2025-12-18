@@ -161,6 +161,19 @@ def count_votes():
     results = blockchain.count_votes()
     return jsonify(results), 200
 
+@app.route('/election/window', methods=['POST'])
+def set_election_window():
+    values = request.get_json()
+    start_time = values.get('start_time')
+    end_time = values.get('end_time')
+    
+    if start_time is None or end_time is None:
+        return 'Missing start_time or end_time', 400
+    
+    blockchain.set_election_window(start_time, end_time)
+    
+    return jsonify({'message': 'Election window configured'}), 200
+
 # UDP port for broadcasting presence
 BROADCAST_PORT = 54321
 peer_discovery_active = True

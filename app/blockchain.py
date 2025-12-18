@@ -15,6 +15,9 @@ class Blockchain:
         self.data_dir = 'data'
         self.file_path = f'{self.data_dir}/chain_{port}.json'
         
+        self.election_start = None
+        self.election_end = None
+        
         # Create data directory if it doesn't exist
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
@@ -32,6 +35,8 @@ class Blockchain:
                     self.chain = data.get('chain', [])
                     self.current_transactions = data.get('transactions', [])
                     self.nodes = set(data.get('nodes', []))
+                    self.election_start = data.get('election_start')
+                    self.election_end = data.get('election_end')
                     return True
             except Exception as e:
                 print(f"Error loading state: {e}")
@@ -42,13 +47,25 @@ class Blockchain:
         data = {
             'chain': self.chain,
             'transactions': self.current_transactions,
-            'nodes': list(self.nodes)
+            'nodes': list(self.nodes),
+            'election_start': self.election_start,
+            'election_end': self.election_end
         }
         try:
             with open(self.file_path, 'w') as f:
                 json.dump(data, f, indent=4)
         except Exception as e:
             print(f"Error saving state: {e}")
+
+    def set_election_window(self, start_time, end_time):
+        """
+        Set the time window for the election.
+        :param start_time: <float> Unix timestamp
+        :param end_time: <float> Unix timestamp
+        """
+        self.election_start = start_time
+        self.election_end = end_time
+        self.save_state()
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -87,6 +104,14 @@ class Blockchain:
         
         # Verify Signature (skip for mining rewards usually designated by sender='0')
         if sender != '0':
+            # Check Election Window
+            if self.election_start and self.election_end:
+                current_time = time.time()
+                if current_time < self.election_start:
+                    raise ValueError("Election has not started yet.")
+                if current_time > self.election_end:
+                    raise ValueError("Election has ended.")
+
             if not signature or not public_key:
                 raise ValueError("Transaction signature and public key are required.")
             
